@@ -45,41 +45,32 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
   }, [messages]);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="chat-page">
       <h2>Chat with {model}</h2>
       <p>
         Using profile: {profile.name} ({profile.address})
       </p>
-      <button onClick={() => setMessages([])} style={{ marginBottom: "1rem" }}>
+      <button onClick={() => setMessages([])} className="clear-chat-button">
         Clear Chat
       </button>
-      <div className="chat-history" style={{ display: "flex", flexDirection: "column" }}>
+      <div className="chat-history chat-history-flex">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-                style={{
-                marginBottom: "1rem",
-                padding: "0.75rem",
-                borderRadius: "8px",
-                backgroundColor: msg.sender === "user" ? "#2a2a2a" : "#1e1e1e",
-                color: "white",
-                alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
-                maxWidth: "80%",
-                }}
+            className={`chat-bubble ${msg.sender === "user" ? "user" : "llm"}`}
           >
             <strong>{msg.sender === "user" ? "You" : model}:</strong>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{msg.text}</p>
+            <p className="chat-text">{msg.text}</p>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} style={{ marginTop: "1rem", display: "flex" }}>
+      <form onSubmit={handleSubmit} className="chat-form">
         <textarea
           className="chat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message"
-          style={{ width: "75%", marginRight: "0.5rem", height: "3rem", resize: "none" }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

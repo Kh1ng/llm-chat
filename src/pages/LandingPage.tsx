@@ -20,7 +20,7 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
   }, []);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="landing-page">
       <h2>Select a Model</h2>
       {profiles.length === 0 && (
         <p>No profiles available. Go to Settings to add one.</p>

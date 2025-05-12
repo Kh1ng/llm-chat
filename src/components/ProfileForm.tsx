@@ -81,7 +81,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
   return (
     <>
       <Toaster position="top-right" richColors />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="profile-form">
         <input
           placeholder="Profile name"
           value={name}

@@ -14,9 +14,9 @@ function App() {
     <>
       <header>
         {view === "landing" ? (
-          <button onClick={() => setView("settings")}>Settings</button>
+          <button onClick={() => setView("settings")} className="settings-button">Settings</button>
         ) : (
-          <button onClick={() => setView("landing")} style={{ fontSize: "1.2rem" }}>
+          <button onClick={() => setView("landing")} className="back-button">
             ←
           </button>
         )}

@@ -13,11 +13,11 @@ export default function ProfileCard(props: Props) {
   const { name, address, models } = profile;
   return (
   
-    <details style={{ marginBottom: "1rem" }}>
-      <summary style={{ cursor: "pointer", fontWeight: "bold" }}>
+    <details className="profile-card">
+      <summary className="profile-card-summary">
         {name} — {address}
       </summary>
-      <div style={{ marginTop: "0.5rem", paddingLeft: "1rem" }}>
+      <div className="profile-card-content">
         <label>Select Model:</label>
         <select
           onChange={(e) => onSelectModel(e.target.value)}
@@ -30,10 +30,10 @@ export default function ProfileCard(props: Props) {
           ))}
         </select>
         <br />
-        <button onClick={onRemove} style={{ marginTop: "0.5rem" }}>
+        <button onClick={onRemove} className="profile-button">
           Remove
         </button>
-        <button onClick={onOpenChat} style={{ marginLeft: "0.5rem", marginTop: "0.5rem" }}>
+        <button onClick={onOpenChat} className="profile-button open-chat">
           Open Chat
         </button>
       </div>
