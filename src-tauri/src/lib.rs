@@ -1,5 +1,6 @@
 use reqwest::Client;
 use serde_json::Value;
+use tauri_plugin_store;
 
 #[tauri::command]
 async fn get_models(llm_address: String) -> Result<String, String> {
@@ -23,27 +24,12 @@ async fn get_models(llm_address: String) -> Result<String, String> {
     Ok(body.to_string())
 }
 
-#[tauri::command]
-async fn fetch_data() -> Result<String, String> {
-    let client = Client::new();
-    let response = client
-        .get("https://api.example.com/data")
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    let body = response
-        .text()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    Ok(body)
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![get_models])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
