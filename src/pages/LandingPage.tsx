@@ -1,6 +1,7 @@
 import ProfileCard from "../components/ProfileCard";
 import { useEffect, useState } from "react";
-import { loadProfiles, saveProfiles, Profile } from "../store/profileStore";
+import { loadProfiles, saveProfiles } from "../store/profileStore";
+import { Profile } from "../types/types";
 
 type LandingPageProps = {
   onOpenChat: (profile: Profile, model: string) => void;

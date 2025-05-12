@@ -1,10 +1,5 @@
 import { Store } from "@tauri-apps/plugin-store";
-
-export type Profile = {
-  name: string;
-  address: string;
-  models: string[];
-};
+import  { Profile } from "../types/types"
 
 let store: Store | null = null;
 

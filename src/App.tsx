@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import SettingsPage from "./pages/SettingsPage";
-import { Profile } from "./store/profileStore";
+import { Profile } from "./types/types";
 import ChatPage from "./pages/ChatPage";
 import "./App.css";
 

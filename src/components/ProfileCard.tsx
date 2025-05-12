@@ -1,4 +1,4 @@
-import { Profile } from "../store/profileStore";
+import { Profile } from "../types/types";
 
 type Props = {
   profile: Profile;
