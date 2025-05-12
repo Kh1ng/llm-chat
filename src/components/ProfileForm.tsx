@@ -14,11 +14,20 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
   // Address validation helpers
   function isValidAddress(input: string): boolean {
     if (!input.trim()) return false;
-    // Match IP:PORT
+
+    // Remove protocol scheme
+    const stripped = input.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
     const ipWithPort = /^(\d{1,3}\.){3}\d{1,3}:\d{2,5}$/;
-    // Match domain, optionally with port
-    const domain = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d{2,5})?$/;
-    return ipWithPort.test(input) || domain.test(input);
+    const localhostWithPort = /^localhost:\d{2,5}$/;
+    const domainWithOptionalPort =
+      /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d{2,5})?$/;
+
+    return (
+      ipWithPort.test(stripped) ||
+      localhostWithPort.test(stripped) ||
+      domainWithOptionalPort.test(stripped)
+    );
   }
 
   function looksLikeIpWithoutPort(input: string): boolean {
@@ -29,7 +38,9 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
     e.preventDefault();
     if (!isValidAddress(address)) {
       if (looksLikeIpWithoutPort(address)) {
-        toast.warning("That looks like an IP address — did you forget the port?");
+        toast.warning(
+          "That looks like an IP address — did you forget the port?"
+        );
       } else {
         toast.error("Please enter a valid IP Address or domain.");
         return;
@@ -80,7 +91,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
 
   return (
     <>
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-right" richColors closeButton expand />
       <form onSubmit={handleSubmit} className="profile-form">
         <input
           placeholder="Profile name"
