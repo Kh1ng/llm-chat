@@ -4,8 +4,13 @@ import { Toaster, toast } from "sonner";
 import "./App.css";
 
 function App() {
-  const [profiles, setProfiles] = useState<{ name: string; address: string; models: string[] }[]>([]);
-  const [currentProfile, setCurrentProfile] = useState({ name: "", address: "" });
+  const [profiles, setProfiles] = useState<
+    { name: string; address: string; models: string[] }[]
+  >([]);
+  const [currentProfile, setCurrentProfile] = useState({
+    name: "",
+    address: "",
+  });
   const [selectedModel, setSelectedModel] = useState("");
 
   async function handleAddProfile(e: React.FormEvent) {
@@ -61,21 +66,24 @@ function App() {
       </form>
 
       {profiles.map((profile) => (
-        <div key={profile.name}>
-          <h3>
+        <details key={profile.name} style={{ marginBottom: "1rem" }}>
+          <summary style={{ cursor: "pointer", fontWeight: "bold" }}>
             {profile.name} — {profile.address}
-          </h3>
-          <select
-            onChange={(e) => setSelectedModel(e.target.value)}
-            value={selectedModel}
-          >
-            {profile.models.map((model) => (
-              <option key={model} value={model}>
-                {model}
-              </option>
-            ))}
-          </select>
-        </div>
+          </summary>
+          <div style={{ marginTop: "0.5rem", paddingLeft: "1rem" }}>
+            <label>Select Model:</label>
+            <select
+              onChange={(e) => setSelectedModel(e.target.value)}
+              value={selectedModel}
+            >
+              {profile.models.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
+          </div>
+        </details>
       ))}
     </main>
   );
