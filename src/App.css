@@ -108,9 +108,37 @@ button {
   input,
   button {
     color: #ffffff;
-    background-color: #0f0f0f98;
+    background-color: #1a1a1a;
+    border: 1px solid #3a3a3a;
   }
+
+  input::placeholder {
+    color: #999;
+  }
+
   button:active {
     background-color: #0f0f0f69;
+  }
+}
+
+.chat-input {
+  width: 75%;
+  margin-right: 0.5rem;
+}
+
+.chat-history {
+  margin-top: 1rem;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #fafbfc;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chat-history {
+    background-color: #1a1a1a;
+    border-color: #333;
   }
 }

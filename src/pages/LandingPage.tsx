@@ -2,12 +2,21 @@ import ProfileCard from "../components/ProfileCard";
 import { useEffect, useState } from "react";
 import { loadProfiles, saveProfiles, Profile } from "../store/profileStore";
 
-export default function LandingPage() {
+type LandingPageProps = {
+  onOpenChat: (profile: Profile, model: string) => void;
+};
+
+export default function LandingPage({ onOpenChat }: LandingPageProps) {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedModel, setSelectedModel] = useState("");
 
   useEffect(() => {
-    loadProfiles().then(setProfiles);
+    loadProfiles().then((data) => {
+      setProfiles(data);
+      if (data.length > 0 && data[0].models.length > 0) {
+        setSelectedModel(data[0].models[0]);
+      }
+    });
   }, []);
 
   return (
@@ -17,19 +26,19 @@ export default function LandingPage() {
         <p>No profiles available. Go to Settings to add one.</p>
       )}
       {profiles.map((profile) => (
-        <ProfileCard
-          key={profile.name}
-          name={profile.name}
-          address={profile.address}
-          models={profile.models}
-          selectedModel={selectedModel}
-          onSelectModel={setSelectedModel}
-          onRemove={() => {
-            const updated = profiles.filter((p) => p.name !== profile.name);
-            setProfiles(updated);
-            saveProfiles(updated);
-          }}
-        />
+        <div key={profile.name}>
+          <ProfileCard
+            profile={profile}
+            selectedModel={selectedModel}
+            onSelectModel={setSelectedModel}
+            onRemove={() => {
+              const updated = profiles.filter((p) => p.name !== profile.name);
+              setProfiles(updated);
+              saveProfiles(updated);
+            }}
+            onOpenChat={() => onOpenChat(profile, selectedModel)}
+          />
+        </div>
       ))}
     </div>
   );

@@ -1,5 +1,6 @@
 import ProfileForm from "../components/ProfileForm";
 
+
 export default function SettingsPage() {
   return (
     <div style={{ padding: "1rem" }}>
