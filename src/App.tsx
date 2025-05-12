@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { Toaster, toast } from "sonner";
+import { useEffect } from "react";
+import { loadProfiles, saveProfiles } from "./store/profileStore";
+import ProfileCard from "./components/ProfileCard";
 import "./App.css";
 
 function App() {
@@ -13,6 +16,10 @@ function App() {
   });
   const [selectedModel, setSelectedModel] = useState("");
 
+  useEffect(() => {
+    loadProfiles().then(setProfiles);
+  }, []);
+
   async function handleAddProfile(e: React.FormEvent) {
     e.preventDefault();
     try {
@@ -24,10 +31,14 @@ function App() {
         ...currentProfile,
         models: parsed.models.map((m: any) => m.name),
       };
-      setProfiles((prev) => [
-        ...prev.filter((p) => p.name !== newProfile.name),
-        newProfile,
-      ]);
+      setProfiles((prev) => {
+        const updated = [
+          ...prev.filter((p) => p.name !== newProfile.name),
+          newProfile,
+        ];
+        saveProfiles(updated);
+        return updated;
+      });
     } catch (err) {
       toast.error(`LLM unreachable at ${currentProfile.address}`, {
         description: "We'll still save this profile, but it may not be online.",
@@ -36,10 +47,14 @@ function App() {
         ...currentProfile,
         models: [],
       };
-      setProfiles((prev) => [
-        ...prev.filter((p) => p.name !== newProfile.name),
-        newProfile,
-      ]);
+      setProfiles((prev) => {
+        const updated = [
+          ...prev.filter((p) => p.name !== newProfile.name),
+          newProfile,
+        ];
+        saveProfiles(updated);
+        return updated;
+      });
     }
   }
 
@@ -66,24 +81,19 @@ function App() {
       </form>
 
       {profiles.map((profile) => (
-        <details key={profile.name} style={{ marginBottom: "1rem" }}>
-          <summary style={{ cursor: "pointer", fontWeight: "bold" }}>
-            {profile.name} — {profile.address}
-          </summary>
-          <div style={{ marginTop: "0.5rem", paddingLeft: "1rem" }}>
-            <label>Select Model:</label>
-            <select
-              onChange={(e) => setSelectedModel(e.target.value)}
-              value={selectedModel}
-            >
-              {profile.models.map((model) => (
-                <option key={model} value={model}>
-                  {model}
-                </option>
-              ))}
-            </select>
-          </div>
-        </details>
+        <ProfileCard
+          key={profile.name}
+          name={profile.name}
+          address={profile.address}
+          models={profile.models}
+          selectedModel={selectedModel}
+          onSelectModel={(model) => setSelectedModel(model)}
+          onRemove={() => {
+            const updated = profiles.filter((p) => p.name !== profile.name);
+            setProfiles(updated);
+            saveProfiles(updated);
+          }}
+        />
       ))}
     </main>
   );
