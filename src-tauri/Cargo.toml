@@ -2,7 +2,7 @@
 name = "llm-chat"
 version = "0.1.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["Colton Spurgin"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -25,4 +25,5 @@ serde_json = "1"
 reqwest = { version = "0.12.15", features = ["json"] }
 tokio = "1.45.0"
 tauri-plugin-store = "2"
+base64 = "0.22.1"
 

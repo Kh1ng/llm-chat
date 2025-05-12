@@ -2,6 +2,8 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { toast, Toaster } from "sonner";
 import { loadProfiles, saveProfiles } from "../store/profileStore";
+import { Profile } from "../types/types";
+import { buildAuthHeader, fetchWithOptionalAuth } from "../utils/authHelpers";
 
 /**
  * ProfileForm is a reusable component for creating a new LLM profile.
@@ -48,6 +50,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
     }
     try {
       const modelsJson = await invoke("get_models", { llmAddress: address });
+      
       const parsed = JSON.parse(modelsJson as string);
       const newProfile = {
         name,

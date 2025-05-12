@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { loadProfiles, saveProfiles, type Profile } from "../../src/store/profileStore";
+import { loadProfiles, saveProfiles } from "../../src/store/profileStore";
+import { Profile } from "../../src/types/types"
 
 vi.mock("@tauri-apps/plugin-store", () => {
   let fakeData: any = {};
