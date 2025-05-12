@@ -11,8 +11,30 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
 
+  // Address validation helpers
+  function isValidAddress(input: string): boolean {
+    if (!input.trim()) return false;
+    // Match IP:PORT
+    const ipWithPort = /^(\d{1,3}\.){3}\d{1,3}:\d{2,5}$/;
+    // Match domain, optionally with port
+    const domain = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d{2,5})?$/;
+    return ipWithPort.test(input) || domain.test(input);
+  }
+
+  function looksLikeIpWithoutPort(input: string): boolean {
+    return /^(\d{1,3}\.){3}\d{1,3}$/.test(input);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!isValidAddress(address)) {
+      if (looksLikeIpWithoutPort(address)) {
+        toast.warning("That looks like an IP address — did you forget the port?");
+      } else {
+        toast.error("Please enter a valid IP Address or domain.");
+        return;
+      }
+    }
     try {
       const modelsJson = await invoke("get_models", { llmAddress: address });
       const parsed = JSON.parse(modelsJson as string);
