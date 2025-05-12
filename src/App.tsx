@@ -13,8 +13,13 @@ function App() {
   return (
     <>
       <header>
-        <button onClick={() => setView("landing")}>Home</button>
-        <button onClick={() => setView("settings")}>Settings</button>
+        {view === "landing" ? (
+          <button onClick={() => setView("settings")}>Settings</button>
+        ) : (
+          <button onClick={() => setView("landing")} style={{ fontSize: "1.2rem" }}>
+            ←
+          </button>
+        )}
       </header>
 
       {view === "landing" ? (
