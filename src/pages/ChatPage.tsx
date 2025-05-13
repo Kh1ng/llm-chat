@@ -1,14 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-
-type ChatPageProps = {
-  profile: {
-    name: string;
-    address: string;
-    models: string[];
-  };
-  model: string;
-};
+import ReactMarkdown from "react-markdown";
+import { ChatPageProps } from "@/types/types";
 
 export default function ChatPage({ profile, model }: ChatPageProps) {
   const [input, setInput] = useState("");
@@ -30,13 +23,31 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
     setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInput("");
 
-    const reply = await invoke("send_prompt", {
-      llmAddress: profile.address,
-      model,
-      prompt: userMessage,
-    });
+    // Add a placeholder response
+    setMessages((prev) => [...prev, { sender: "llm", text: "..." }]);
 
-    setMessages((prev) => [...prev, { sender: "llm", text: reply as string }]);
+    try {
+      const reply = await invoke("send_prompt", {
+        llmAddress: profile.address,
+        model,
+        prompt: userMessage,
+      });
+
+      setMessages((prev) => {
+        const withoutPending = prev.filter(
+          (msg, idx) => !(idx === prev.length - 1 && msg.text === "...")
+        );
+        return [...withoutPending, { sender: "llm", text: reply as string }];
+      });
+    } catch (err) {
+      setMessages((prev) => {
+        const withoutPending = prev.filter(
+          (msg, idx) => !(idx === prev.length - 1 && msg.text === "...")
+        );
+        return [...withoutPending, { sender: "llm", text: "⚠️ Failed to get response." }];
+      });
+      console.error("LLM request failed:", err);
+    }
   }
 
   // Scroll to bottom when messages change
@@ -60,7 +71,21 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
             className={`chat-bubble ${msg.sender === "user" ? "user" : "llm"}`}
           >
             <strong>{msg.sender === "user" ? "You" : model}:</strong>
-            <p className="chat-text">{msg.text}</p>
+            {msg.text === "..." ? (
+              <p className="chat-text">
+                <span className="ellipsis">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </p>
+            ) : msg.sender === "llm" ? (
+              <div className="chat-text">
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
+              </div>
+            ) : (
+              <p className="chat-text">{msg.text}</p>
+            )}
           </div>
         ))}
         <div ref={messagesEndRef} />

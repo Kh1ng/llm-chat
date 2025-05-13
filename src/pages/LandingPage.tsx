@@ -2,6 +2,7 @@ import ProfileCard from "../components/ProfileCard";
 import { useEffect, useState } from "react";
 import { loadProfiles, saveProfiles } from "../store/profileStore";
 import { Profile } from "../types/types";
+import { invoke } from "@tauri-apps/api/core";
 
 type LandingPageProps = {
   onOpenChat: (profile: Profile, model: string) => void;

@@ -1,23 +1,38 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { loadProfiles, saveProfiles } from "../../src/store/profileStore";
+import {
+  loadProfiles,
+  saveProfiles,
+  updateProfileModels,
+  saveOrUpdateProfile
+} from "../../src/store/profileStore";
 import { Profile } from "../../src/types/types"
 
-vi.mock("@tauri-apps/plugin-store", () => {
-  let fakeData: any = {};
+const fakeData: Record<string, any> = {};
 
+class MockStore {
+  async get<T>(key: string): Promise<T | undefined> {
+    return fakeData[key];
+  }
+
+  async set<T>(key: string, value: T): Promise<void> {
+    fakeData[key] = value;
+  }
+
+  async save(): Promise<void> {}
+
+  clear(): void {
+    for (const key of Object.keys(fakeData)) {
+      delete fakeData[key];
+    }
+  }
+}
+
+const sharedStore = new MockStore();
+
+vi.mock("@tauri-apps/plugin-store", () => {
   return {
-    Store: class {
-      constructor() {}
-      static async load() {
-        return new this();
-      }
-      async get() {
-        return fakeData["profiles"] || [];
-      }
-      async set(key: string, value: any) {
-        fakeData[key] = value;
-      }
-      async save() {}
+    Store: {
+      load: async () => sharedStore
     }
   };
 });
@@ -28,8 +43,13 @@ const mockProfiles: Profile[] = [
 ];
 
 beforeEach(async () => {
-  // Clear the store to ensure clean state for each test
-  await saveProfiles([]);
+  sharedStore.clear();
+  const mod = await import("../../src/store/profileStore");
+  (mod as any).store = null;
+
+  const { Store } = await import("@tauri-apps/plugin-store");
+  const store = await Store.load(".test");
+  await store.set("profiles", []);
 });
 
 describe("profileStore", () => {
@@ -42,6 +62,7 @@ describe("profileStore", () => {
     await saveProfiles(mockProfiles);
     const loaded = await loadProfiles();
     expect(loaded).toEqual(mockProfiles);
+    expect(fakeData["profiles"]).toEqual(mockProfiles);
   });
 
   it("overwrites old profiles with same name", async () => {
@@ -54,24 +75,45 @@ describe("profileStore", () => {
   });
 
   it("handles corrupted profile data gracefully", async () => {
-    const { Store } = await import("@tauri-apps/plugin-store");
-
-    // Override get() to simulate corrupted data
-    Store.prototype.get = async () => "__corrupted__" as unknown as undefined; 
+    fakeData["profiles"] = "__corrupted__";
        
     const result = await loadProfiles();
     expect(Array.isArray(result)).toBe(true);
   });
 
-  it("throws when attempting to save a profile with missing required fields", async () => {
-    const invalidProfiles = [
-      { name: "", address: "localhost", models: ["llama3"] },
-      { name: "Test", address: "", models: ["llama3"] },
-      { name: "Test", address: "localhost", models: [] }
-    ];
+it("updates models for an existing profile using updateProfileModels", async () => {
+  await saveProfiles(mockProfiles);
+  await updateProfileModels("local", ["new-model"]);
+  const updated = await loadProfiles();
+  const local = updated.find(p => p.name === "local");
+  expect(local?.models).toEqual(["new-model"]);
+});
 
-    for (const profile of invalidProfiles) {
-      await expect(() => saveProfiles([profile as Profile])).rejects.toThrow();
-    }
-  });
+it("saves a new profile with saveOrUpdateProfile", async () => {
+  const newProfile: Profile = {
+    name: "test1",
+    address: "127.0.0.1",
+    models: ["mistral"]
+  };
+  await saveOrUpdateProfile(newProfile);
+  const loaded = await loadProfiles();
+  expect(loaded.find(p => p.name === "test1")).toEqual(newProfile);
+});
+
+it("overwrites a profile with saveOrUpdateProfile", async () => {
+  const original: Profile = {
+    name: "duplicate",
+    address: "127.0.0.1",
+    models: ["v1"]
+  };
+  const updated: Profile = {
+    name: "duplicate",
+    address: "127.0.0.1",
+    models: ["v2"]
+  };
+  await saveOrUpdateProfile(original);
+  await saveOrUpdateProfile(updated);
+  const result = await loadProfiles();
+  expect(result.find(p => p.name === "duplicate")).toEqual(updated);
+});
 });

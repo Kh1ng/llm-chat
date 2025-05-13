@@ -21,3 +21,21 @@ export async function saveProfiles(profiles: Profile[]) {
   await s.set("profiles", profiles);
   await s.save();
 }
+
+export async function updateProfileModels(profileName: string, models: string[]) {
+  const s = await getStore();
+  const profiles = await loadProfiles();
+  const updatedProfiles = profiles.map((p) =>
+    p.name === profileName ? { ...p, models } : p
+  );
+  await saveProfiles(updatedProfiles);
+}
+
+export async function saveOrUpdateProfile(profile: Profile) {
+  const existing = await loadProfiles();
+  const updated = [
+    ...existing.filter((p) => p.name !== profile.name),
+    profile,
+  ];
+  await saveProfiles(updated);
+}

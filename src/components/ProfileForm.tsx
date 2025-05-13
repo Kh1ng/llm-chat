@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { toast, Toaster } from "sonner";
-import { loadProfiles, saveProfiles } from "../store/profileStore";
-import { Profile } from "../types/types";
-import { buildAuthHeader, fetchWithOptionalAuth } from "../utils/authHelpers";
+import { toast } from "sonner";
+import { saveOrUpdateProfile } from "../store/profileStore";
+import AuthBuilder from './AuthBuilder';
+import { Auth } from "../types/types";
+import { isValidAddress, looksLikeIpWithoutPort, isValidMacAddress } from "../utils/validation";
 
 /**
  * ProfileForm is a reusable component for creating a new LLM profile.
@@ -12,32 +13,22 @@ import { buildAuthHeader, fetchWithOptionalAuth } from "../utils/authHelpers";
 export default function ProfileForm({ onSave }: { onSave?: () => void }) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-
-  // Address validation helpers
-  function isValidAddress(input: string): boolean {
-    if (!input.trim()) return false;
-
-    // Remove protocol scheme
-    const stripped = input.replace(/^https?:\/\//, "").replace(/\/$/, "");
-
-    const ipWithPort = /^(\d{1,3}\.){3}\d{1,3}:\d{2,5}$/;
-    const localhostWithPort = /^localhost:\d{2,5}$/;
-    const domainWithOptionalPort =
-      /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d{2,5})?$/;
-
-    return (
-      ipWithPort.test(stripped) ||
-      localhostWithPort.test(stripped) ||
-      domainWithOptionalPort.test(stripped)
-    );
-  }
-
-  function looksLikeIpWithoutPort(input: string): boolean {
-    return /^(\d{1,3}\.){3}\d{1,3}$/.test(input);
-  }
+  const [auth, setAuth] = useState<Auth | undefined>(undefined);
+  const [useAuth, setUseAuth] = useState(false);
+  const [useWakeOnLan, setUseWakeOnLan] = useState(false);
+  const [macAddress, setMacAddress] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [broadcastAddress, setBroadcastAddress] = useState("");
+  const [port, setPort] = useState("");
+  const [bindAddress, setBindAddress] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (useWakeOnLan && !isValidMacAddress(macAddress)) {
+      toast.error("Invalid MAC address. Please enter a valid format (e.g. AA:BB:CC:DD:EE:FF).");
+      return;
+    }
     if (!isValidAddress(address)) {
       if (looksLikeIpWithoutPort(address)) {
         toast.warning(
@@ -48,22 +39,30 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
         return;
       }
     }
+    setLoading(true);
     try {
-      const modelsJson = await invoke("get_models", { llmAddress: address });
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout contacting server")), 10000)
+      );
+
+      const modelsJson = await Promise.race([
+        invoke("get_models", { llmAddress: address }),
+        timeout,
+      ]);
       
       const parsed = JSON.parse(modelsJson as string);
       const newProfile = {
         name,
         address,
         models: parsed.models.map((m: any) => m.name),
+        ...(useAuth && auth?.value ? { auth } : {}),
+        ...(useWakeOnLan && macAddress ? { macAddress } : {}),
+        ...(broadcastAddress ? { broadcastAddress } : {}),
+        ...(port ? { port: parseInt(port) } : {}),
+        ...(bindAddress ? { bindAddress } : {}),
       };
 
-      const existing = await loadProfiles();
-      const updated = [
-        ...existing.filter((p) => p.name !== newProfile.name),
-        newProfile,
-      ];
-      await saveProfiles(updated);
+      await saveOrUpdateProfile(newProfile);
 
       toast.success("Profile saved!");
       setName("");
@@ -78,23 +77,24 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
         name,
         address,
         models: [],
+        ...(useAuth && auth?.value ? { auth } : {}),
+        ...(useWakeOnLan && macAddress ? { macAddress } : {}),
+        ...(broadcastAddress ? { broadcastAddress } : {}),
+        ...(port ? { port: parseInt(port) } : {}),
+        ...(bindAddress ? { bindAddress } : {}),
       };
-      const existing = await loadProfiles();
-      const updated = [
-        ...existing.filter((p) => p.name !== newProfile.name),
-        newProfile,
-      ];
-      await saveProfiles(updated);
+      await saveOrUpdateProfile(newProfile);
 
       setName("");
       setAddress("");
       if (onSave) onSave();
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <>
-      <Toaster position="top-right" richColors closeButton expand />
       <form onSubmit={handleSubmit} className="profile-form">
         <input
           placeholder="Profile name"
@@ -108,7 +108,81 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
           onChange={(e) => setAddress(e.target.value)}
           required
         />
-        <button type="submit">Save Profile</button>
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          style={{ marginBottom: "1rem" }}
+        >
+          {showAdvanced ? "Hide Advanced Settings" : "Show Advanced Settings"}
+        </button>
+        {showAdvanced && (
+          <>
+            <label>
+              <input
+                type="checkbox"
+                checked={useAuth}
+                onChange={(e) => setUseAuth(e.target.checked)}
+              />
+              Add authentication
+            </label>
+            {useAuth && (
+              <AuthBuilder
+                auth={auth}
+                onChange={(newAuth) => setAuth(newAuth)}
+                showHeaderPreview
+              />
+            )}
+            <label>
+              <input
+                type="checkbox"
+                checked={useWakeOnLan}
+                onChange={(e) => setUseWakeOnLan(e.target.checked)}
+              />
+              Enable Wake-on-LAN
+            </label>
+            {useWakeOnLan && (
+              <input
+                type="text"
+                placeholder="MAC address (e.g. AA:BB:CC:DD:EE:FF)"
+                value={macAddress}
+                onChange={(e) => setMacAddress(e.target.value)}
+              />
+            )}
+            <label>
+              Broadcast Address{" "}
+              <span title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)">ⓘ</span>
+            </label>
+            <input
+              type="text"
+              placeholder="192.168.1.255"
+              value={broadcastAddress}
+              onChange={(e) => setBroadcastAddress(e.target.value)}
+            />
+            <label>
+              Port{" "}
+              <span title="Optional: Port to send the magic packet on (default is 9)">ⓘ</span>
+            </label>
+            <input
+              type="number"
+              placeholder="9"
+              value={port}
+              onChange={(e) => setPort(e.target.value)}
+            />
+            <label>
+              Bind Address{" "}
+              <span title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)">ⓘ</span>
+            </label>
+            <input
+              type="text"
+              placeholder="192.168.1.100"
+              value={bindAddress}
+              onChange={(e) => setBindAddress(e.target.value)}
+            />
+          </>
+        )}
+        <button type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Save Profile"}
+        </button>
       </form>
     </>
   );

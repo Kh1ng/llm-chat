@@ -4,6 +4,7 @@ import SettingsPage from "./pages/SettingsPage";
 import { Profile } from "./types/types";
 import ChatPage from "./pages/ChatPage";
 import "./App.css";
+import { Toaster } from "sonner";
 
 function App() {
   const [view, setView] = useState<"landing" | "settings" | "chat">("landing");
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-right" richColors closeButton expand />
       <header>
         {view === "landing" ? (
           <button onClick={() => setView("settings")} className="settings-button">Settings</button>
