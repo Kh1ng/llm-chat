@@ -1,9 +1,9 @@
 import React from "react";
-import type { Profile, Auth } from "../types/types";
+import type { Auth } from "../types/types";
 
 interface AuthBuilderProps {
   auth?: Auth;
-  onChange: (auth: Auth) => void;
+  onChange: (auth: Auth) => void; // Ensure this is used when auth changes
   showHeaderPreview?: boolean;
 }
 
@@ -11,6 +11,7 @@ export default function AuthBuilder({ auth, onChange, showHeaderPreview = false 
   const type = auth?.type || "bearer";
   const value = auth?.value || "";
   const headerName = auth?.headerName || "";
+
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = e.target.value as Auth["type"];

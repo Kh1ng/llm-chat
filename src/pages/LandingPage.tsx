@@ -2,11 +2,8 @@ import ProfileCard from "../components/ProfileCard";
 import { useEffect, useState } from "react";
 import { loadProfiles, saveProfiles } from "../store/profileStore";
 import { Profile } from "../types/types";
-import { invoke } from "@tauri-apps/api/core";
+import { LandingPageProps } from "../types/types";
 
-type LandingPageProps = {
-  onOpenChat: (profile: Profile, model: string) => void;
-};
 
 export default function LandingPage({ onOpenChat }: LandingPageProps) {
   const [profiles, setProfiles] = useState<Profile[]>([]);

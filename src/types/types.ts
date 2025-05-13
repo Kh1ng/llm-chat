@@ -24,3 +24,7 @@ export type ChatPageProps = {
   };
   model: string;
 };
+
+export type LandingPageProps = {
+  onOpenChat: (profile: Profile, model: string) => void;
+};

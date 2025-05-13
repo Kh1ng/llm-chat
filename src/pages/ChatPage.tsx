@@ -10,9 +10,6 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
   >([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  if (!profile || !model) {
-    return <p>Missing profile or model info. Please return to landing page.</p>;
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,6 +51,14 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  if (!profile || !model) {
+    return (
+      <div className="chat-page">
+        <p>Missing profile or model info. Please return to landing page.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chat-page">

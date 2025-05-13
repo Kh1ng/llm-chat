@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
@@ -68,7 +69,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
       setName("");
       setAddress("");
       if (onSave) onSave();
-    } catch (err) {
+    } catch {
       toast.error(`LLM unreachable at ${address}`, {
         description: "We'll still save this profile, but it may not be online.",
       });
