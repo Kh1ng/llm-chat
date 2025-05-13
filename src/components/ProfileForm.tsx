@@ -3,9 +3,13 @@ import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
 import { saveOrUpdateProfile } from "../store/profileStore";
-import AuthBuilder from './AuthBuilder';
+import AuthBuilder from "./AuthBuilder";
 import { Auth } from "../types/types";
-import { isValidAddress, looksLikeIpWithoutPort, isValidMacAddress } from "../utils/validation";
+import {
+  isValidAddress,
+  looksLikeIpWithoutPort,
+  isValidMacAddress,
+} from "../utils/validation";
 
 /**
  * ProfileForm is a reusable component for creating a new LLM profile.
@@ -27,7 +31,9 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (useWakeOnLan && !isValidMacAddress(macAddress)) {
-      toast.error("Invalid MAC address. Please enter a valid format (e.g. AA:BB:CC:DD:EE:FF).");
+      toast.error(
+        "Invalid MAC address. Please enter a valid format (e.g. AA:BB:CC:DD:EE:FF)."
+      );
       return;
     }
     if (!isValidAddress(address)) {
@@ -50,7 +56,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
         invoke("get_models", { llmAddress: address }),
         timeout,
       ]);
-      
+
       const parsed = JSON.parse(modelsJson as string);
       const newProfile = {
         name,
@@ -112,7 +118,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          style={{ marginBottom: "1rem" }}
+          className="settings-button"
         >
           {showAdvanced ? "Hide Advanced Settings" : "Show Advanced Settings"}
         </button>
@@ -151,7 +157,9 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             )}
             <label>
               Broadcast Address{" "}
-              <span title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)">ⓘ</span>
+              <span title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)">
+                ⓘ
+              </span>
             </label>
             <input
               type="text"
@@ -161,7 +169,9 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Port{" "}
-              <span title="Optional: Port to send the magic packet on (default is 9)">ⓘ</span>
+              <span title="Optional: Port to send the magic packet on (default is 9)">
+                ⓘ
+              </span>
             </label>
             <input
               type="number"
@@ -171,7 +181,9 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Bind Address{" "}
-              <span title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)">ⓘ</span>
+              <span title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)">
+                ⓘ
+              </span>
             </label>
             <input
               type="text"
@@ -181,7 +193,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
           </>
         )}
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="settings-button">
           {loading ? "Saving..." : "Save Profile"}
         </button>
       </form>

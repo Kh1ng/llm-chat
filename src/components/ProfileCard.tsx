@@ -1,49 +1,104 @@
-import { Profile } from "../types/types";
 import { invoke } from "@tauri-apps/api/core";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { updateProfileModels } from "../store/profileStore";
+import { ProfileCardProps } from "../types/types";
 
-type Props = {
-  profile: Profile;
-  selectedModel: string;
-  onSelectModel: (model: string) => void;
-  onRemove: () => void;
-  onOpenChat: () => void;
-};
-
-export default function ProfileCard(props: Props) {
-  const { profile, selectedModel, onSelectModel, onRemove, onOpenChat } = props;
+export default function ProfileCard(props: ProfileCardProps) {
+  const {
+    profile,
+    selectedModel,
+    onSelectModel,
+    onRemove,
+    onOpenChat,
+    isActive,
+    onClick,
+    onRefreshModels,
+  } = props;
   const { name, address, models } = profile;
   const [modelList, setModelList] = useState<string[]>(models);
   useEffect(() => {
     setModelList(profile.models);
   }, [profile.models]);
+
+  useEffect(() => {
+    if (isActive && status === "unavailable" && !waking) {
+      console.log("Auto-checking model status...");
+      setStatus("checking");
+      Promise.resolve(onRefreshModels())
+        .then((result) => {
+          if (Array.isArray(result) && result.length > 0) {
+            setModelList(result);
+            setStatus("ready");
+          } else {
+            setStatus("unavailable");
+          }
+        })
+        .catch((err) => {
+          console.error("Auto-refresh models failed:", err);
+          setStatus("unavailable");
+        });
+    }
+  }, [isActive]);
+
   const [waking, setWaking] = useState(false);
+  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
   return (
-  
-    <details className="profile-card">
-      <summary className="profile-card-summary">
+    <details className="profile-card" open={isActive}>
+      <summary
+        className="profile-card-summary"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick();
+        }}
+        tabIndex={0}
+      >
         {name} — {address}
       </summary>
       <div className="profile-card-content">
-        <label>Select Model:</label>
-        <select
-          onChange={(e) => onSelectModel(e.target.value)}
-          value={selectedModel}
-        >
-          {modelList.map((model) => (
-            <option key={model} value={model}>
-              {model}
-            </option>
-          ))}
-        </select>
+        <div className="model-select-row">
+          <label htmlFor={`model-select-${name}`}>Select Model:</label>
+          <select
+            id={`model-select-${name}`}
+            onChange={(e) => onSelectModel(e.target.value)}
+            value={selectedModel}
+            disabled={waking || modelList.length === 0 || status === "unavailable"}
+            className={`model-select ${waking || modelList.length === 0 || status === "unavailable" ? "disabled" : ""}`}
+          >
+            {modelList.map((model) => (
+              <option key={model} value={model}>
+                {model}
+              </option>
+            ))}
+          </select>
+          <div className="status-indicator">
+            <span>Status:</span>
+            {status === "checking" || status === "waking" ? (
+              <>
+                <span className="spinner" />
+                <span style={{ color: "orange" }}>
+                  {status === "waking" ? "Waking" : "Checking"}
+                  <span className="animated-dots">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </span>
+              </>
+            ) : status === "ready" ? (
+              <span style={{ color: "green" }}>Ready</span>
+            ) : (
+              <span style={{ color: "red" }}>Unavailable</span>
+            )}
+          </div>
+        </div>
         <br />
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div className="profile-button-group">
           <button onClick={onRemove} className="profile-button">
             Remove
           </button>
-          <button onClick={onOpenChat} className="profile-button open-chat">
+          <button onClick={onOpenChat} className="profile-button open-chat" disabled={status !== "ready"}>
             Open Chat
           </button>
           {profile.macAddress && (
@@ -53,9 +108,12 @@ export default function ProfileCard(props: Props) {
               onClick={async () => {
                 console.log("Sending magic packet...");
                 setWaking(true);
+                setStatus("waking");
                 try {
                   await invoke("wake_on_lan", { profile });
-                  toast.success("Magic packet sent! Attempting to fetch models...");
+                  toast.success(
+                    "Magic packet sent! Attempting to fetch models..."
+                  );
                   console.log("Magic packet sent.");
 
                   // Wait a few seconds to allow machine to boot
@@ -72,7 +130,10 @@ export default function ProfileCard(props: Props) {
                       console.log("Raw modelsJson result:", modelsJson);
 
                       // Parse if returned as string
-                      let parsedModels = typeof modelsJson === "string" ? JSON.parse(modelsJson) : modelsJson;
+                      let parsedModels =
+                        typeof modelsJson === "string"
+                          ? JSON.parse(modelsJson)
+                          : modelsJson;
                       const modelNames = Array.isArray(parsedModels.models)
                         ? parsedModels.models.map((m: any) => m.name)
                         : [];
@@ -80,18 +141,27 @@ export default function ProfileCard(props: Props) {
                       if (modelNames.length > 0) {
                         toast.success("Models loaded successfully.");
                         setModelList(modelNames);
+                        setStatus("ready");
                         console.log("Updated model list:", modelNames);
                         onSelectModel(modelNames[0]);
                         try {
                           await updateProfileModels(profile.name, modelNames);
-                          console.log("Updated profile stored with new models.");
+                          console.log(
+                            "Updated profile stored with new models."
+                          );
                         } catch (e) {
-                          console.error("Failed to persist updated models to profile store:", e);
+                          console.error(
+                            "Failed to persist updated models to profile store:",
+                            e
+                          );
                         }
                         break;
                       }
                     } catch (error) {
-                      console.warn(`Attempt ${attempt} to fetch models failed.`);
+                      console.warn(
+                        `Attempt ${attempt} to fetch models failed.`
+                      );
+                      console.error("Fetch attempt error:", error);
                       if (attempt < 3) {
                         await new Promise((res) => setTimeout(res, 2000));
                       }
@@ -100,13 +170,16 @@ export default function ProfileCard(props: Props) {
 
                   if (!modelsJson) {
                     toast.error("Failed to load models after waking LLM.");
+                    setStatus("unavailable");
                   }
                 } catch (err: any) {
-                  const message = typeof err === "string"
-                    ? err
-                    : err?.message || JSON.stringify(err) || "Unknown error";
+                  const message =
+                    typeof err === "string"
+                      ? err
+                      : err?.message || JSON.stringify(err) || "Unknown error";
                   console.error("Failed to send magic packet:", message);
                   toast.error(`Wake failed: ${message}`);
+                  setStatus("unavailable");
                 } finally {
                   setWaking(false);
                 }
@@ -121,6 +194,28 @@ export default function ProfileCard(props: Props) {
               )}
             </button>
           )}
+          <button
+            className="profile-button"
+            disabled={waking}
+            onClick={() => {
+              console.log("Refreshing models...");
+              setStatus("checking");
+              Promise.resolve(onRefreshModels())
+                .then((result) => {
+                  if (Array.isArray(result) && result.length > 0) {
+                    setStatus("ready");
+                  } else {
+                    setStatus("unavailable");
+                  }
+                })
+                .catch((err) => {
+                  console.error("Refresh models failed:", err);
+                  setStatus("unavailable");
+                });
+            }}
+          >
+            Refresh Models
+          </button>
         </div>
       </div>
     </details>

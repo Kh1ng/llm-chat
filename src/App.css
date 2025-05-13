@@ -15,14 +15,81 @@
   -webkit-text-size-adjust: 100%;
 }
 
+/* ===========================================================
+   Dark Mode Overrides
+=========================================================== */
 @media (prefers-color-scheme: dark) {
   :root {
     color: #f6f6f6;
     background-color: #2f2f2f;
   }
+
+  a:hover {
+    color: #24c8db;
+  }
+
+  input,
+  button {
+    color: #ffffff;
+    background-color: #1a1a1a;
+    border: 1px solid #3a3a3a;
+  }
+
+  input::placeholder {
+    color: #999;
+  }
+
+  button:active {
+    background-color: #0f0f0f69;
+  }
+
+  .chat-input {
+    color: #ffffff;
+    background-color: #1a1a1a;
+    border: 1px solid #3a3a3a;
+  }
+
+  .chat-input::-webkit-scrollbar,
+  .chat-history::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-input::-webkit-scrollbar-thumb,
+  .chat-history::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, 0.2);
+    border-radius: 3px;
+  }
+
+  .chat-input::-webkit-scrollbar-track,
+  .chat-history::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-input,
+  .chat-history {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(200, 200, 200, 0.2) transparent;
+  }
+
+  .chat-history {
+    background-color: #1a1a1a;
+    border-color: #333;
+  }
+
+  select {
+    background-color: #1a1a1a;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    appearance: none;
+  }
 }
 
-/* Layout Containers */
+/* ===========================================================
+   Layout Containers
+=========================================================== */
 .container {
   margin: 0;
   padding-top: 10vh;
@@ -42,11 +109,16 @@
 }
 
 .settings-page {
-  padding: 1rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .settings-form-container {
-  margin-top: 1rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .chat-history-flex {
@@ -54,7 +126,9 @@
   flex-direction: column;
 }
 
-/* Text / Elements */
+/* ===========================================================
+   Typography and Text Elements
+=========================================================== */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -66,6 +140,9 @@ h1 {
   text-align: center;
 }
 
+/* ===========================================================
+   Links
+=========================================================== */
 a {
   font-weight: 500;
   color: #646cff;
@@ -76,13 +153,9 @@ a:hover {
   color: #535bf2;
 }
 
-@media (prefers-color-scheme: dark) {
-  a:hover {
-    color: #24c8db;
-  }
-}
-
-/* Inputs & Buttons */
+/* ===========================================================
+   Inputs and Buttons
+=========================================================== */
 input,
 button {
   border-radius: 8px;
@@ -111,24 +184,29 @@ button:active {
   background-color: #e8e8e8;
 }
 
-@media (prefers-color-scheme: dark) {
-  input,
-  button {
-    color: #ffffff;
-    background-color: #1a1a1a;
-    border: 1px solid #3a3a3a;
-  }
-
-  input::placeholder {
-    color: #999;
-  }
-
-  button:active {
-    background-color: #0f0f0f69;
-  }
+/* Dark mode-aware select element (default light mode styles removed due to duplication) */
+select {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 4px;
 }
 
-/* Chat UI */
+/* Disabled and focus states for select */
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #666;
+}
+
+/* ===========================================================
+   Chat UI
+=========================================================== */
 .chat-input {
   width: 100%;
   margin-right: 0.5rem;
@@ -153,36 +231,7 @@ button:active {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .chat-input {
-    color: #ffffff;
-    background-color: #1a1a1a;
-    border: 1px solid #3a3a3a;
-  }
-
-  .chat-input::-webkit-scrollbar,
-  .chat-history::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .chat-input::-webkit-scrollbar-thumb,
-  .chat-history::-webkit-scrollbar-thumb {
-    background-color: rgba(200, 200, 200, 0.2);
-    border-radius: 3px;
-  }
-
-  .chat-input::-webkit-scrollbar-track,
-  .chat-history::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .chat-input,
-  .chat-history {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(200, 200, 200, 0.2) transparent;
-  }
+  margin-top: 1rem;
 }
 
 .chat-history {
@@ -193,17 +242,6 @@ button:active {
   padding: 1rem;
   border-radius: 6px;
   background-color: #fafbfc;
-}
-
-@media (prefers-color-scheme: dark) {
-  .chat-history {
-    background-color: #1a1a1a;
-    border-color: #333;
-  }
-}
-
-.clear-chat-button {
-  margin-bottom: 1rem;
 }
 
 .chat-bubble {
@@ -231,32 +269,68 @@ button:active {
   white-space: pre-wrap;
 }
 
-.chat-form {
-  margin-top: 1rem;
-  display: flex;
-}
-
-/* Profile UI */
+/* ===========================================================
+   Profile UI
+=========================================================== */
 .profile-card {
   margin-bottom: 1rem;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
 .profile-card-summary {
   cursor: pointer;
   font-weight: bold;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-card-summary:focus {
+  outline: none;
 }
 
 .profile-card-content {
   margin-top: 0.5rem;
   padding-left: 1rem;
+  overflow: hidden;
+  max-height: 1000px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.profile-card.collapsed .profile-card-content {
+  max-height: 0;
+  opacity: 0;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.profile-card[open] .profile-card-content {
+  display: block;
 }
 
 .profile-button {
+  min-width: 110px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
   margin-top: 0.5rem;
 }
 
 .profile-button.open-chat {
   margin-left: 0.5rem;
+}
+
+.profile-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.profile-button:not(:disabled):hover {
+  background-color: #3a3a3a;
 }
 
 .profile-form {
@@ -266,10 +340,117 @@ button:active {
   max-width: 400px;
 }
 
-/* Settings UI */
+/* Button group styling */
+.profile-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* ===========================================================
+   Settings UI
+=========================================================== */
 /* (No specific styles beyond container and form container already included) */
 
-/* Responsive Styles */
+/* ===========================================================
+   Miscellaneous / Utility Styles
+=========================================================== */
+/* Hide global page scrollbar */
+body {
+  overflow: hidden;
+}
+
+/* ... animation */
+.ellipsis span {
+  animation: blink 1s infinite;
+  margin-left: 2px;
+  opacity: 0.3;
+}
+
+.ellipsis span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ellipsis span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.animated-dots span {
+  animation: blink 1.4s infinite steps(1, start);
+  opacity: 0;
+}
+.animated-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+.animated-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.animated-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.profile-button.open-chat:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.model-select {
+  transition: opacity 0.2s ease;
+}
+
+.model-select.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.status-indicator {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-left: auto; /* push it to the right */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-ready {
+  color: #3bd671;
+}
+
+.status-checking {
+  color: #ffd95a;
+  animation: pulse 1s infinite;
+}
+
+.status-unavailable {
+  color: #e25d5d;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* ===========================================================
+   Responsive
+=========================================================== */
 @media (max-width: 768px) {
   .chat-form {
     flex-direction: column;
@@ -322,27 +503,135 @@ button:active {
     max-width: 90%;
   }
 }
-/* Hide global page scrollbar */
+
+@media (max-width: 600px) {
+  .profile-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-button {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings-page {
+    padding: 1rem;
+  }
+}
+
+/* ===========================================================
+   Tiny Phone
+=========================================================== */
+@media (max-width: 430px) {
+  .landing-page,
+  .settings-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .profile-button {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .status-indicator {
+    font-size: 0.8rem;
+  }
+
+  h1, h2 {
+    font-size: 1.25rem;
+  }
+
+  .chat-bubble {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===========================================================
+   Miscellaneous Layout / Utility
+=========================================================== */
+/* Suggested minimum size for macOS (works with Tauri resizing too) */
+html,
 body {
-  overflow: hidden;
+  min-width: 400px;
+  min-height: 300px;
 }
 
-/* ... animation */
-.ellipsis span {
-  animation: blink 1s infinite;
-  margin-left: 2px;
-  opacity: 0.3;
+:root[data-theme="light"] {
+  color: #0f0f0f;
+  background-color: #f6f6f6;
 }
 
-.ellipsis span:nth-child(2) {
-  animation-delay: 0.2s;
+:root[data-theme="dark"] {
+  color: #f6f6f6;
+  background-color: #2f2f2f;
 }
 
-.ellipsis span:nth-child(3) {
-  animation-delay: 0.4s;
+.landing-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+.profile-card-summary:focus {
+  outline: none;
+}
+
+/* Clean up model select and status row spacing */
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Tidy up status indicator */
+.status-indicator {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-left: auto; /* push it to the right */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Group and space buttons consistently */
+.profile-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Match button appearance across app */
+.profile-button {
+  min-width: 110px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.profile-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.profile-button:not(:disabled):hover {
+  background-color: #3a3a3a;
+}
+
+@media (min-width: 768px) {
+  .profile-card-content {
+    padding-left: 1.5rem;
+  }
 }

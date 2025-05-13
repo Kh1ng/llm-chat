@@ -28,3 +28,14 @@ export type ChatPageProps = {
 export type LandingPageProps = {
   onOpenChat: (profile: Profile, model: string) => void;
 };
+
+export type ProfileCardProps = {
+  profile: Profile;
+  selectedModel: string;
+  onSelectModel: (model: string) => void;
+  onRemove: () => void;
+  onOpenChat: () => void;
+  onClick: () => void;
+  isActive: boolean;
+  onRefreshModels: () => void;
+};

@@ -3,7 +3,7 @@ import type { Auth } from "../types/types";
 
 interface AuthBuilderProps {
   auth?: Auth;
-  onChange: (auth: Auth) => void; // Ensure this is used when auth changes
+  onChange: (auth: Auth) => void;
   showHeaderPreview?: boolean;
 }
 

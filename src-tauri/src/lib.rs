@@ -2,6 +2,8 @@ use base64::{engine::general_purpose, Engine as _};
 use reqwest::Client;
 use serde_json::Value;
 use tauri_plugin_store;
+use tokio::time::timeout;
+use std::time::Duration;
 
 #[derive(serde::Deserialize)]
 struct Auth {
@@ -97,9 +99,9 @@ async fn get_models(llm_address: String, auth: Option<Auth>) -> Result<String, S
         );
     }
 
-    let response = request
-        .send()
+    let response = timeout(Duration::from_secs(7), request.send())
         .await
+        .map_err(|_| "Request timed out".to_string())?
         .map_err(|e| format!("Request failed: {}", e))?;
 
     if !response.status().is_success() {

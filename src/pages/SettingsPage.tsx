@@ -1,4 +1,5 @@
 import ProfileForm from "../components/ProfileForm";
+import ThemeToggle from "../components/ThemeToggle";
 
 
 export default function SettingsPage() {
@@ -8,6 +9,7 @@ export default function SettingsPage() {
       <p>Add a new profile by entering a name and an LLM URL or IP. This will fetch available models and save them locally.</p>
       <div className="settings-form-container">
         <ProfileForm />
+        <ThemeToggle />
       </div>
     </div>
   );
