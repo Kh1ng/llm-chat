@@ -23,7 +23,6 @@ export async function saveProfiles(profiles: Profile[]) {
 }
 
 export async function updateProfileModels(profileName: string, models: string[]) {
-  const s = await getStore();
   const profiles = await loadProfiles();
   const updatedProfiles = profiles.map((p) =>
     p.name === profileName ? { ...p, models } : p

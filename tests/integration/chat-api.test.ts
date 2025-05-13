@@ -1,14 +1,13 @@
 import * as React from "react";
-import { describe, it, beforeEach, vi, expect } from "vitest";
+import { describe, it, beforeEach, beforeAll, vi, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import ChatPage from "../../src/pages/ChatPage.tsx";
 import { type Profile } from "@/types/types";
-import * as tauri from "@tauri-apps/api/core";
-
-
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn(),
 }));
+import { invoke } from "@tauri-apps/api/core";
 
 beforeAll(() => {
   // Mock scrollIntoView to prevent test crash
@@ -23,7 +22,7 @@ describe("ChatPage", () => {
   };
 
   let model = "mistral";
-  const mockedInvoke = tauri.invoke as unknown as vi.Mock;
+  const mockedInvoke = invoke as unknown as ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
