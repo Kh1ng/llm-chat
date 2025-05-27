@@ -1,7 +1,9 @@
-# Tauri + React + Typescript
+# LLM-Chat
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+An iOS client for self hosted large language models.
 
-## Recommended IDE Setup
+Built with Tauri, React, and Typescript
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## Features
+- Supports authentication (Work in progress)
+- Wake on LAN (Manual configuration only at this time)
