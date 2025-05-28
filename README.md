@@ -1,4 +1,4 @@
-![GitHub license](https://img.shields.io/badge/license-AGPL-green.svg) [![Build and Test](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/ci.yml)
+![GitHub license](https://img.shields.io/badge/license-AGPL-green.svg) [![Build and Test](https://github.com/Kh1ng/llm-chat/actions/workflows/ci.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/ci.yml)
 
 # LLM Chat
 
