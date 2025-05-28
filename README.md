@@ -1,17 +1,19 @@
+![GitHub license](https://img.shields.io/badge/license-AGPL-green.svg) [![Build and Test](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/ci.yml)
+
 # LLM Chat
 
 LLM Chat is a lightweight, Tauri-based cross-platform client for interacting with self-hosted language models via the [Ollama](https://ollama.com) backend. Built with Rust and TypeScript, it offers a streamlined local experience on desktop and mobile platforms.
 
 ## Features
 
-- 🔌 Connect to one or more Ollama servers
-- 📡 Wake-on-LAN support for headless servers
-- 🧠 Fetch and select available models from each profile
-- 💬 Start chat sessions per profile/model combo
-- 🌙 Dark mode toggle
-- 🔄 Refresh models manually
-- 📱 Experimental Android & Windows builds
-- 🛠 Lightweight and self hosting friendly
+-  Connect to one or more Ollama servers
+-  Wake-on-LAN support for headless servers
+-  Fetch and select available models from each profile
+-  Start chat sessions per profile/model combo
+-  Dark mode toggle
+-  Refresh models manually
+-  Experimental Android & Windows builds
+-  Lightweight and self hosting friendly
 
 ## Getting Started
 
@@ -29,10 +31,14 @@ See the [Wiki](https://github.com/llm-chat/wiki) for:
 
 This application does not fully implement built-in authentication. If you plan to expose your Ollama server over the internet or use this app remotely, it's **strongly recommended** to secure access with a VPN (e.g., [Tailscale](https://tailscale.com)) or equivalent network-layer protection.
 
+## Support
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H21FMK25)
+
 ## License
 
 This project is licensed under the [AGPL-3.0 License](./LICENSE). Commercial licensing is available — please contact the author for details.
 
 ---
 
-Want to contribute? Open issues, submit PRs, or suggest ideas on the [Discussions](https://github.com/llm-chat/discussions) page.
+Think of something interesting? Open issues or suggest ideas on the [Discussions](https://github.com/llm-chat/discussions) page.
