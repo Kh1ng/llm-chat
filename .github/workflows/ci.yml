@@ -19,7 +19,7 @@ jobs:
           node-version: 18
 
       - name: Install frontend dependencies
-        run: npm ci
+        run: npm i
 
       - name: Lint code
         run: npm run lint
