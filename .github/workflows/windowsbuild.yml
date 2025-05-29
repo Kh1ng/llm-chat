@@ -37,3 +37,10 @@ jobs:
         with:
           name: windows-app
           path: src-tauri/target/release/bundle/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: src-tauri/target/release/bundle/*.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

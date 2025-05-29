@@ -62,3 +62,10 @@ jobs:
         with:
           name: macOS-app
           path: src-tauri/target/release/bundle/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: src-tauri/target/release/bundle/**/*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -62,3 +62,10 @@ jobs:
         with:
           name: ios-app
           path: src-tauri/target/release/bundle/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: src-tauri/target/release/bundle/**/*.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
