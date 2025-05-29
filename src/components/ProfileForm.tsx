@@ -104,12 +104,14 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
     <>
       <form onSubmit={handleSubmit} className="profile-form">
         <input
+          className="themed-input"
           placeholder="Profile name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
         <input
+          className="themed-input"
           placeholder="LLM URL or IP"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
@@ -118,7 +120,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="settings-button"
+          className="themed-button"
         >
           {showAdvanced ? "Hide Advanced Settings" : "Show Advanced Settings"}
         </button>
@@ -149,6 +151,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             </label>
             {useWakeOnLan && (
               <input
+                className="themed-input"
                 type="text"
                 placeholder="MAC address (e.g. AA:BB:CC:DD:EE:FF)"
                 value={macAddress}
@@ -157,11 +160,12 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             )}
             <label>
               Broadcast Address{" "}
-              <span title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)">
+              <span className="tooltip-icon" title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" tabIndex="0" role="tooltip">
                 ⓘ
               </span>
             </label>
             <input
+              className="themed-input"
               type="text"
               placeholder="192.168.1.255"
               value={broadcastAddress}
@@ -169,11 +173,12 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Port{" "}
-              <span title="Optional: Port to send the magic packet on (default is 9)">
+              <span className="tooltip-icon" title="Optional: Port to send the magic packet on (default is 9)" tabIndex="0" role="tooltip">
                 ⓘ
               </span>
             </label>
             <input
+              className="themed-input"
               type="number"
               placeholder="9"
               value={port}
@@ -181,11 +186,12 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Bind Address{" "}
-              <span title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)">
+              <span className="tooltip-icon" title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)" tabIndex="0" role="tooltip">
                 ⓘ
               </span>
             </label>
             <input
+              className="themed-input"
               type="text"
               placeholder="192.168.1.100"
               value={bindAddress}
@@ -193,7 +199,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
           </>
         )}
-        <button type="submit" disabled={loading} className="settings-button">
+        <button type="submit" disabled={loading} className="themed-button">
           {loading ? "Saving..." : "Save Profile"}
         </button>
       </form>

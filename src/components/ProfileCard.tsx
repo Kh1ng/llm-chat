@@ -17,6 +17,9 @@ export default function ProfileCard(props: ProfileCardProps) {
   } = props;
   const { name, address, models } = profile;
   const [modelList, setModelList] = useState<string[]>(models);
+  const [waking, setWaking] = useState(false);
+  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
+
   useEffect(() => {
     setModelList(profile.models);
   }, [profile.models]);
@@ -39,10 +42,8 @@ export default function ProfileCard(props: ProfileCardProps) {
           setStatus("unavailable");
         });
     }
-  }, [isActive]);
+  }, [isActive, status, waking, onRefreshModels]);
 
-  const [waking, setWaking] = useState(false);
-  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
   return (
     <details className="profile-card" open={isActive}>
       <summary

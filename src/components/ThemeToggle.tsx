@@ -20,7 +20,7 @@ export default function ThemeToggle() {
 
   return (
     <div className="profile-form">
-      <button onClick={toggleTheme} className="settings-button">
+      <button onClick={toggleTheme} className="themed-button">
         Switch to {theme === "light" ? "Dark" : "Light"} Mode
       </button>
     </div>
