@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { saveOrUpdateProfile } from "../store/profileStore";
 import AuthBuilder from "./AuthBuilder";
 import { Auth } from "../types/types";
+import HelpTooltip from "./HelpTooltip";
+
 import {
   isValidAddress,
   looksLikeIpWithoutPort,
@@ -160,9 +162,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             )}
             <label>
               Broadcast Address{" "}
-              <span className="tooltip-icon" title="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" tabIndex="0" role="tooltip">
-                ⓘ
-              </span>
+              <HelpTooltip text="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" />
             </label>
             <input
               className="themed-input"
@@ -173,9 +173,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Port{" "}
-              <span className="tooltip-icon" title="Optional: Port to send the magic packet on (default is 9)" tabIndex="0" role="tooltip">
-                ⓘ
-              </span>
+              <HelpTooltip text="Optional: Port to send the magic packet on (default is 9)" />
             </label>
             <input
               className="themed-input"
@@ -186,9 +184,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
             />
             <label>
               Bind Address{" "}
-              <span className="tooltip-icon" title="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)" tabIndex="0" role="tooltip">
-                ⓘ
-              </span>
+              <HelpTooltip text="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)" />
             </label>
             <input
               className="themed-input"

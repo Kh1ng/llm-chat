@@ -1,0 +1,23 @@
+.help-tooltip {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
+.tooltip-bubble {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--tooltip-bg, #222); /* fallback dark */
+  color: var(--tooltip-text, #fff);    /* fallback white */
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  white-space: pre-line;
+  z-index: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
