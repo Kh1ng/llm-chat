@@ -152,47 +152,49 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
               Enable Wake-on-LAN
             </label>
             {useWakeOnLan && (
-              <input
-                className="themed-input"
-                type="text"
-                placeholder="MAC address (e.g. AA:BB:CC:DD:EE:FF)"
-                value={macAddress}
-                onChange={(e) => setMacAddress(e.target.value)}
-              />
+              <>
+                <input
+                  className="themed-input"
+                  type="text"
+                  placeholder="MAC address (e.g. AA:BB:CC:DD:EE:FF)"
+                  value={macAddress}
+                  onChange={(e) => setMacAddress(e.target.value)}
+                />
+                <label>
+                  Broadcast Address{" "}
+                  <HelpTooltip text="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" />
+                </label>
+                <input
+                  className="themed-input"
+                  type="text"
+                  placeholder="192.168.1.255"
+                  value={broadcastAddress}
+                  onChange={(e) => setBroadcastAddress(e.target.value)}
+                />
+                <label>
+                  Port{" "}
+                  <HelpTooltip text="Optional: Port to send the magic packet on (default is 9)" />
+                </label>
+                <input
+                  className="themed-input"
+                  type="number"
+                  placeholder="9"
+                  value={port}
+                  onChange={(e) => setPort(e.target.value)}
+                />
+                <label>
+                  Bind Address{" "}
+                  <HelpTooltip text="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)" />
+                </label>
+                <input
+                  className="themed-input"
+                  type="text"
+                  placeholder="192.168.1.100"
+                  value={bindAddress}
+                  onChange={(e) => setBindAddress(e.target.value)}
+                />
+              </>
             )}
-            <label>
-              Broadcast Address{" "}
-              <HelpTooltip text="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" />
-            </label>
-            <input
-              className="themed-input"
-              type="text"
-              placeholder="192.168.1.255"
-              value={broadcastAddress}
-              onChange={(e) => setBroadcastAddress(e.target.value)}
-            />
-            <label>
-              Port{" "}
-              <HelpTooltip text="Optional: Port to send the magic packet on (default is 9)" />
-            </label>
-            <input
-              className="themed-input"
-              type="number"
-              placeholder="9"
-              value={port}
-              onChange={(e) => setPort(e.target.value)}
-            />
-            <label>
-              Bind Address{" "}
-              <HelpTooltip text="Optional: Your machine's IP to bind from (needed on macOS, e.g. 192.168.1.100)" />
-            </label>
-            <input
-              className="themed-input"
-              type="text"
-              placeholder="192.168.1.100"
-              value={bindAddress}
-              onChange={(e) => setBindAddress(e.target.value)}
-            />
           </>
         )}
         <button type="submit" disabled={loading} className="themed-button">

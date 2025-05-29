@@ -53,7 +53,7 @@ export default function AuthBuilder({ auth, onChange, showHeaderPreview = false 
     <div className="auth-builder">
       <label>
         Auth Type:
-        <select value={type} onChange={handleTypeChange}>
+        <select value={type} onChange={handleTypeChange} className="themed-select">
           <option value="bearer">Bearer</option>
           <option value="basic">Basic</option>
           <option value="custom">Custom</option>
@@ -69,7 +69,7 @@ export default function AuthBuilder({ auth, onChange, showHeaderPreview = false 
 
       <label>
         Token / Credentials:
-        <input type="text" value={value} onChange={handleValueChange} placeholder="your token..." />
+        <input type="text" value={value} onChange={handleValueChange} placeholder="your token..." className="themed-input"/>
       </label>
 
       {showHeaderPreview && value && (

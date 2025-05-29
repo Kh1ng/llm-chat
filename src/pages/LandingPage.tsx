@@ -8,7 +8,10 @@ import { invoke } from "@tauri-apps/api/core";
 export default function LandingPage({ onOpenChat }: LandingPageProps) {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [selectedModel, setSelectedModel] = useState("");
-  const [activeProfileName, setActiveProfileName] = useState<string | null>(null);
+  const [activeProfileName, setActiveProfileName] = useState<string | null>(
+    null
+  );
+  const [view, setView] = useState<"landing" | "settings">("landing");
 
   useEffect(() => {
     loadProfiles().then((data) => {
@@ -46,7 +49,7 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
         <p>No profiles available. Go to Settings to add one.</p>
       )}
       {profiles.map((profile) => (
-        <div key={profile.name}>
+        <div className="model-list" key={profile.name}>
           <ProfileCard
             profile={profile}
             selectedModel={selectedModel}
@@ -63,6 +66,14 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
           />
         </div>
       ))}
+      <div className="add-model-btn-wrapper">
+        <button
+          onClick={() => setView("settings")}
+          className="themed-button small"
+        >
+          Add / Edit Models
+        </button>
+      </div>
     </div>
   );
 }

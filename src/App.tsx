@@ -5,6 +5,7 @@ import { Profile } from "./types/types";
 import ChatPage from "./pages/ChatPage";
 import "./App.css";
 import { Toaster } from "sonner";
+import ThemeToggle from "./components/ThemeToggle";
 
 function App() {
   const [view, setView] = useState<"landing" | "settings" | "chat">("landing");
@@ -14,17 +15,20 @@ function App() {
   return (
     <>
       <Toaster position="top-right" richColors closeButton expand />
-      <header>
+      <header className="app-header">
         {view === "landing" ? (
-          <button onClick={() => setView("settings")} className="themed-button">Settings</button>
+          <div></div>
         ) : (
           <button onClick={() => setView("landing")} className="themed-button">
             ←
           </button>
         )}
+        <div className="right">
+          <ThemeToggle />
+        </div>
       </header>
 
-      {view === "landing" ? (
+      {view === "landing" ? ( <>
         <LandingPage
           onOpenChat={(profile, model) => {
             setChatProfile(profile);
@@ -32,6 +36,8 @@ function App() {
             setView("chat");
           }}
         />
+        <button onClick={() => setView("settings")} className="themed-button">Settings</button>
+      </>
       ) : view === "settings" ? (
         <SettingsPage />
       ) : chatProfile && chatModel ? (
