@@ -1,6 +1,8 @@
 ![GitHub license](https://img.shields.io/badge/license-AGPL-green.svg) [![Lint](https://github.com/Kh1ng/llm-chat/actions/workflows/lint.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/lint.yml)
 [![Test](https://github.com/Kh1ng/llm-chat/actions/workflows/test.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/test.yml)
-[![Build](https://github.com/Kh1ng/llm-chat/actions/workflows/build.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build.yml)
+[![Mac OS](https://github.com/Kh1ng/llm-chat/actions/workflows/build.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/macbuild.yml)
+[![iOS](https://github.com/Kh1ng/llm-chat/actions/workflows/build.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/iosbuild.yml)
+[![Windows](https://github.com/Kh1ng/llm-chat/actions/workflows/build.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/windowsbuild.yml)
 
 # LLM Chat
 
