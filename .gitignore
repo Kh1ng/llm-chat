@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Tauri stuff
+/src-tauri/Cargo.lock
+/src-tauri/target
