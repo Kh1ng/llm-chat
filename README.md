@@ -41,7 +41,7 @@ This application does not fully implement built-in authentication. If you plan t
 
 ## License
 
-This project is licensed under the [AGPL-3.0 License](./LICENSE). Commercial licensing is available — please contact the author for details.
+This project is licensed under the [AGPL-3.0 License](./LICENSE).
 
 ---
 
