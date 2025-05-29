@@ -16,9 +16,9 @@ function App() {
       <Toaster position="top-right" richColors closeButton expand />
       <header>
         {view === "landing" ? (
-          <button onClick={() => setView("settings")} className="settings-button">Settings</button>
+          <button onClick={() => setView("settings")} className="themed-button">Settings</button>
         ) : (
-          <button onClick={() => setView("landing")} className="back-button">
+          <button onClick={() => setView("landing")} className="themed-button">
             ←
           </button>
         )}
