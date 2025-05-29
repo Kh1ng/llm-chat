@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Target directories
-/src-tauri/target/
+# Tauri stuff
+/src-tauri/Cargo.lock
+/src-tauri/target
