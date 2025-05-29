@@ -20,7 +20,6 @@ export type ChatPageProps = {
   profile: {
     name: string;
     address: string;
-    models: string[];
   };
   model: string;
 };

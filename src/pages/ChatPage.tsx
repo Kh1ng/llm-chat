@@ -10,7 +10,6 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
   >([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
