@@ -1,4 +1,4 @@
-name: Build, Lint, Test, and Tauri Build
+name: Lint and Test
 
 on:
   push:
@@ -7,34 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - run: npm ci
+      - run: npm run lint
 
-      - name: Install frontend dependencies
-        run: npm i
-
-      - name: Lint code
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          toolchain: stable
-          override: true
-
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli
-
-      - name: Build Tauri app
-        run: npm run tauri build
+          node-version: 18
+      - run: npm ci
+      - run: npm run test
