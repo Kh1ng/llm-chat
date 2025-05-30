@@ -162,7 +162,7 @@ export default function ProfileForm({ onSave }: { onSave?: () => void }) {
                 />
                 <label>
                   Broadcast Address{" "}
-                  <HelpTooltip text="Optional: IP to broadcast the magic packet to (e.g. 192.168.1.255)" />
+                  <HelpTooltip text="IP to broadcast the magic packet to (e.g. 192.168.1.255)" />
                 </label>
                 <input
                   className="themed-input"
