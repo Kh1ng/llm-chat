@@ -28,16 +28,24 @@ function App() {
         </div>
       </header>
 
-      {view === "landing" ? ( <>
-        <LandingPage
-          onOpenChat={(profile, model) => {
-            setChatProfile(profile);
-            setChatModel(model);
-            setView("chat");
-          }}
-        />
-        <button onClick={() => setView("settings")} className="themed-button">Settings</button>
-      </>
+      {view === "landing" ? (
+        <div className="landing-page-wrapper">
+          <LandingPage
+            onOpenChat={(profile, model) => {
+              setChatProfile(profile);
+              setChatModel(model);
+              setView("chat");
+            }}
+          />
+          <div className="add-model-btn-wrapper">
+            <button
+              onClick={() => setView("settings")}
+              className="themed-button fill-width"
+            >
+              Add / Edit Models
+            </button>
+          </div>
+        </div>
       ) : view === "settings" ? (
         <SettingsPage />
       ) : chatProfile && chatModel ? (

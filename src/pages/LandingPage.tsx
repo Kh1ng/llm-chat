@@ -11,7 +11,6 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
   const [activeProfileName, setActiveProfileName] = useState<string | null>(
     null
   );
-  const [view, setView] = useState<"landing" | "settings">("landing");
 
   useEffect(() => {
     loadProfiles().then((data) => {
@@ -44,7 +43,6 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
 
   return (
     <div className="landing-page">
-      <h2>Select a Model</h2>
       {profiles.length === 0 && (
         <p>No profiles available. Go to Settings to add one.</p>
       )}
@@ -66,14 +64,6 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
           />
         </div>
       ))}
-      <div className="add-model-btn-wrapper">
-        <button
-          onClick={() => setView("settings")}
-          className="themed-button small"
-        >
-          Add / Edit Models
-        </button>
-      </div>
     </div>
   );
 }

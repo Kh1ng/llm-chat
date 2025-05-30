@@ -59,28 +59,6 @@
     border: 1px solid #3a3a3a;
   }
 
-  .chat-input::-webkit-scrollbar,
-  .chat-history::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .chat-input::-webkit-scrollbar-thumb,
-  .chat-history::-webkit-scrollbar-thumb {
-    background-color: rgba(200, 200, 200, 0.2);
-    border-radius: 3px;
-  }
-
-  .chat-input::-webkit-scrollbar-track,
-  .chat-history::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .chat-input,
-  .chat-history {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(200, 200, 200, 0.2) transparent;
-  }
-
   .chat-history {
     background-color: #1a1a1a;
     border-color: #333;
@@ -134,6 +112,31 @@
 .chat-history-flex {
   display: flex;
   flex-direction: column;
+}
+
+.landing-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0;
+  height: 100vh;
+}
+
+.landing-page-wrapper > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-model-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 50%;
+  max-width: 300px;
+  height: fit-content;
 }
 
 /* ===========================================================
@@ -245,6 +248,10 @@ select:disabled {
 select:focus {
   outline: none;
   box-shadow: 0 0 0 2px #666;
+}
+
+.fill-width {
+  width: 100%;
 }
 
 /* ===========================================================
@@ -401,6 +408,7 @@ select:focus {
   border-radius: 6px;
   transition: background-color 0.2s ease;
   margin-top: 0.5rem;
+  height: 44px; /* Add this line to constrain button height */
 }
 
 .themed-button:disabled {
@@ -415,9 +423,11 @@ select:focus {
 /* ===========================================================
    Miscellaneous / Utility Styles
 =========================================================== */
-/* Hide global page scrollbar */
 body {
   overflow: hidden;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 /* ... animation */
@@ -436,8 +446,13 @@ body {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .animated-dots span {
@@ -454,8 +469,13 @@ body {
   animation-delay: 0.4s;
 }
 @keyframes blink {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .profile-button.open-chat:disabled {
@@ -502,9 +522,15 @@ body {
 }
 
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .app-header {
@@ -610,7 +636,8 @@ body {
     font-size: 0.8rem;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     font-size: 1.25rem;
   }
 
@@ -637,6 +664,12 @@ body {
   --input-text: #0f0f0f;
   --input-border: transparent;
   --input-placeholder: #888;
+  --bg-gradient: radial-gradient(
+    circle at 50% 100%,
+    #045d5d 0%,
+    #f6f6f6 60%,
+    #ffffff 100%
+  );
 }
 
 /* Dark theme input variables */
@@ -647,12 +680,21 @@ body {
   --input-text: #ffffff;
   --input-border: #3a3a3a;
   --input-placeholder: #999;
+  --bg-gradient: radial-gradient(
+    circle at 50% 100%,
+    #045d5d 0%,
+    #2f2f2f 70%,
+    #1e1e1e 100%
+  );
 }
 
 .landing-page {
+  flex: 1;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 1rem;
   padding: 2rem;
+  overflow-y: auto;
+  height: calc(100vh - 120px); /* allow scrolling within visible space */
 }
 
 .profile-card-summary:focus {
@@ -660,8 +702,10 @@ body {
 }
 
 .model-list {
-  max-height: 60vh;
-  overflow-y: auto;
+  max-height: calc(
+    100vh - 180px
+  ); /* adjusts to leave space for header/footer */
+  padding-right: 0.5rem;
 }
 
 .model-select-row {
@@ -713,5 +757,42 @@ body {
 @media (min-width: 768px) {
   .profile-card-content {
     padding-left: 1.5rem;
+  }
+}
+
+/* ===========================================================
+   Global Scrollbar Styles
+=========================================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* or rgba(...) if you want color */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3); /* light in dark mode */
+  border-radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }
