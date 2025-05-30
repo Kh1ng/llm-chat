@@ -10,9 +10,9 @@ LLM Chat is a lightweight, Tauri-based cross-platform client for interacting wit
 
 ## Features
 
--  Connect to one or more Ollama servers
--  Wake-on-LAN support for headless servers
--  Fetch and select available models from each profile
+-  Connect to one or more OpenAI-compatible API endpoints
+-  Wake-on-LAN support
+-  Save, fetch, and select available models in individual profiles
 -  Start chat sessions per profile/model combo
 -  Dark mode toggle
 -  Refresh models manually
@@ -21,7 +21,7 @@ LLM Chat is a lightweight, Tauri-based cross-platform client for interacting wit
 
 ## Getting Started
 
-iOS builds coming soon
+initial release on iOS and macOS soon (tm).
 
 See the [Wiki](https://github.com/llm-chat/wiki) for:
 
