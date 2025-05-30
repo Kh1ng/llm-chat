@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { updateProfileModels } from "../store/profileStore";
 import { ProfileCardProps } from "../types/types";
@@ -20,29 +20,50 @@ export default function ProfileCard(props: ProfileCardProps) {
   const [waking, setWaking] = useState(false);
   const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
 
+  const statusRef = useRef(status);
+
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+
   useEffect(() => {
     setModelList(profile.models);
   }, [profile.models]);
 
-  useEffect(() => {
+useEffect(() => {
+  let cancelled = false;
+
+  (async () => {
     if (isActive && status === "unavailable" && !waking) {
       console.log("Auto-checking model status...");
       setStatus("checking");
-      Promise.resolve(onRefreshModels())
-        .then((result) => {
+
+      try {
+        const result = await onRefreshModels();
+        if (!cancelled) {
           if (Array.isArray(result) && result.length > 0) {
             setModelList(result);
             setStatus("ready");
           } else {
             setStatus("unavailable");
           }
-        })
-        .catch((err) => {
-          console.error("Auto-refresh models failed:", err);
-          setStatus("unavailable");
-        });
+        }
+      } catch (err) {
+        console.error("Auto-refresh models failed:", err);
+        if (!cancelled) {
+          setStatus("error");
+        }
+      }
     }
-  }, [isActive, status, waking, onRefreshModels]);
+    if (status === "error") {
+      setStatus("unavailable")
+    }
+  })();
+
+  return () => {
+    cancelled = true;
+  };
+}, [isActive, waking]);
 
   return (
     <details className="profile-card" open={isActive}>

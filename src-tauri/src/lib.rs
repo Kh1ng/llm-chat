@@ -74,6 +74,7 @@ fn wake_on_lan(profile: serde_json::Value) -> Result<(), String> {
 #[tauri::command]
 async fn get_models(llm_address: String, auth: Option<Auth>) -> Result<String, String> {
     println!("get_models called with address: {}", llm_address);
+
     let address = if llm_address.starts_with("http://") || llm_address.starts_with("https://") {
         llm_address
     } else {
@@ -81,46 +82,67 @@ async fn get_models(llm_address: String, auth: Option<Auth>) -> Result<String, S
     };
     let url = format!("{}/api/tags", address.trim_end_matches('/'));
     println!("Full URL: {}", url);
-    let client = Client::new();
-    let mut request = client.get(&url);
 
-    if let Some(auth) = auth {
-        let header_name = auth
-            .header_name
-            .unwrap_or_else(|| "Authorization".to_string());
-        let header_value = match auth.r#type.as_str() {
-            "basic" => format!("Basic {}", general_purpose::STANDARD.encode(auth.value)),
-            "bearer" => format!("Bearer {}", auth.value),
-            _ => auth.value,
-        };
-        request = request.header(
-            reqwest::header::HeaderName::from_bytes(header_name.as_bytes()).unwrap(),
-            reqwest::header::HeaderValue::from_str(&header_value).unwrap(),
-        );
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(3))
+        .build()
+        .map_err(|e| format!("Client creation error: {}", e))?;
+
+    for attempt in 1..=3 {
+        println!("Attempt {} to fetch models from {}", attempt, url);
+
+        let mut request = client.get(&url);
+
+        // Optional auth header
+        if let Some(ref auth) = auth {
+            let header_name = auth.header_name.as_deref().unwrap_or("Authorization");
+            let header_value = match auth.r#type.as_str() {
+                "basic" => format!("Basic {}", general_purpose::STANDARD.encode(&auth.value)),
+                "bearer" => format!("Bearer {}", auth.value),
+                _ => auth.value.clone(),
+            };
+
+            request = request.header(
+                reqwest::header::HeaderName::from_bytes(header_name.as_bytes())
+                    .map_err(|e| format!("Invalid header name: {}", e))?,
+                reqwest::header::HeaderValue::from_str(&header_value)
+                    .map_err(|e| format!("Invalid header value: {}", e))?,
+            );
+        }
+
+        match timeout(Duration::from_secs(3), request.send()).await {
+            Ok(Ok(response)) => {
+                if !response.status().is_success() {
+                    let status = response.status();
+                    let error_text = response.text().await.unwrap_or_default();
+                    println!(
+                        "HTTP {} Error: {}\n{}",
+                        status.as_u16(),
+                        status.canonical_reason().unwrap_or("Unknown"),
+                        error_text
+                    );
+                } else {
+                    // Only parse JSON if status is OK
+                    match response.json::<Value>().await {
+                        Ok(body) => return Ok(body.to_string()),
+                        Err(e) => println!("Invalid JSON: {}", e),
+                    }
+                }
+            }
+            Ok(Err(e)) => {
+                println!("Request failed: {}", e);
+            }
+            Err(_) => {
+                println!("Timeout occurred on attempt {}", attempt);
+            }
+        }
+
+        if attempt < 3 {
+            tokio::time::sleep(Duration::from_secs(2)).await;
+        }
     }
 
-    let response = timeout(Duration::from_secs(7), request.send())
-        .await
-        .map_err(|_| "Request timed out".to_string())?
-        .map_err(|e| format!("Request failed: {}", e))?;
-
-    if !response.status().is_success() {
-        let status = response.status();
-        let error_text = response.text().await.unwrap_or_default();
-        return Err(format!(
-            "HTTP {} Error: {}\n{}",
-            status.as_u16(),
-            status.canonical_reason().unwrap_or("Unknown"),
-            error_text
-        ));
-    }
-
-    let body: Value = response
-        .json()
-        .await
-        .map_err(|e| format!("Invalid JSON: {}", e))?;
-
-    Ok(body.to_string())
+    Err("Failed to fetch models after 3 attempts.".to_string())
 }
 
 #[tauri::command]
