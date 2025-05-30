@@ -107,7 +107,7 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
             }
           }}
         />
-        <button type="submit">Send</button>
+        <button className="themed-button" type="submit">Send</button>
       </form>
     </div>
   );
