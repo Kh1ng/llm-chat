@@ -21,7 +21,7 @@ LLM Chat is a lightweight, Tauri-based cross-platform client for interacting wit
 
 ## Getting Started
 
-initial release on iOS and macOS soon (tm).
+Initial release on iOS and macOS soon (tm).
 
 See the [Wiki](https://github.com/llm-chat/wiki) for:
 
