@@ -18,7 +18,7 @@ export default function ProfileCard(props: ProfileCardProps) {
   const { name, address, models } = profile;
   const [modelList, setModelList] = useState<string[]>(models);
   const [waking, setWaking] = useState(false);
-  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
+  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable" | "error">("unavailable");
 
   const statusRef = useRef(status);
 
@@ -63,6 +63,7 @@ useEffect(() => {
   return () => {
     cancelled = true;
   };
+// eslint-disable-next-line react-hooks/exhaustive-deps  
 }, [isActive, waking]);
 
   return (

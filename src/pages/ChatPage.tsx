@@ -65,7 +65,7 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
       <p>
         Using profile: {profile.name} ({profile.address})
       </p>
-      <button onClick={() => setMessages([])} className="clear-chat-button">
+      <button onClick={() => setMessages([])} className="themed-button">
         Clear Chat
       </button>
       <div className="chat-history chat-history-flex">

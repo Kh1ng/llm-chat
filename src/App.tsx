@@ -16,6 +16,7 @@ function App() {
     <>
       <Toaster position="top-right" richColors closeButton expand />
       <header className="app-header">
+        <div className="left">
         {view === "landing" ? (
           <div></div>
         ) : (
@@ -23,6 +24,10 @@ function App() {
             ←
           </button>
         )}
+        </div>
+        <div className="centered">
+        <h1>Vellm</h1>
+        </div>
         <div className="right">
           <ThemeToggle />
         </div>

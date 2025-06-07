@@ -25,12 +25,14 @@ export type ChatPageProps = {
 };
 
 export type LandingPageProps = {
+  // eslint-disable-next-line no-unused-vars
   onOpenChat: (profile: Profile, model: string) => void;
 };
 
 export type ProfileCardProps = {
   profile: Profile;
   selectedModel: string;
+  // eslint-disable-next-line no-unused-vars
   onSelectModel: (model: string) => void;
   onRemove: () => void;
   onOpenChat: () => void;

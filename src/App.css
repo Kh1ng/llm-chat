@@ -65,10 +65,25 @@ body, html, #root {
     border: 1px solid #3a3a3a;
   }
 
+.chat-history {
+  margin-top: 1rem;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: rgba(250, 251, 252, 0.9); /* Light mode */
+  flex: 1;
+  min-height: 0;
+  max-height: 50vh;
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-color-scheme: dark) {
   .chat-history {
-    background-color: #1a1a1a;
-    border-color: #333;
+    background-color: rgba(26, 26, 26, 0.85);
   }
+}
 
   select {
     background-color: #1a1a1a;
@@ -303,19 +318,25 @@ select:focus {
   margin-right: 0.5rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  padding: 0.6em 1.2em;
+  padding: 0.75rem;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   color: #0f0f0f;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.9); /* Light mode */
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   box-sizing: border-box;
-  padding: 0.75rem;
   resize: none;
   min-height: 3rem;
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .chat-input {
+    background-color: rgba(26, 26, 26, 0.85);
+  }
 }
 
 .chat-form {
@@ -865,5 +886,71 @@ body {
 
   ::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ===========================================================
+   Heading Styles
+=========================================================== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+  z-index: 10;
+}
+
+.app-header .centered {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(270deg, #00f2c3, #06c1a0, #048079);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInScale 0.6s ease-out, gradientShift 8s ease infinite;
+}
+
+.app-header .left,
+.app-header .right {
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-header .centered {
+    text-shadow: 0 0 6px rgba(93, 220, 255, 0.3);
+  }
+}
+
+//Fancy stuff
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

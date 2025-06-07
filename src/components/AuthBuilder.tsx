@@ -3,6 +3,7 @@ import type { Auth } from "../types/types";
 
 interface AuthBuilderProps {
   auth?: Auth;
+  // eslint-disable-next-line no-unused-vars
   onChange: (auth: Auth) => void;
   showHeaderPreview?: boolean;
 }
