@@ -26,15 +26,16 @@ fn wake_on_lan(profile: serde_json::Value) -> Result<(), String> {
         .as_str()
         .ok_or("Profile does not contain a valid macAddress")?;
 
-
     let broadcast_ip = profile["broadcastAddress"]
         .as_str()
         .unwrap_or("255.255.255.255")
         .trim_start_matches("http://")
         .trim_start_matches("https://");
 
-    let port = profile["port"].as_u64().unwrap_or(9) as u16;
-    let bind_address = profile["bindAddress"].as_str().unwrap_or("0.0.0.0");
+    // Default WoL port is 9
+    let port = 9u16;
+    // Always bind to 0.0.0.0 (all interfaces)
+    let bind_address = "0.0.0.0";
 
     // Parse MAC address
     let mac_bytes: Vec<u8> = mac_address

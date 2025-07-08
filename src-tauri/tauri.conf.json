@@ -26,7 +26,14 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": []
+    "icon": [],
+    "category": "Utility",
+    "iOS": {
+      "bundleVersion": "0.1.0"
+    },
+    "macOS": {
+      "entitlements": "./Entitlements.plist"
+    }
   },
   "plugins": {}
 }
