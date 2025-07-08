@@ -1,9 +1,9 @@
 use base64::{engine::general_purpose, Engine as _};
 use reqwest::Client;
 use serde_json::Value;
+use std::time::Duration;
 use tauri_plugin_store;
 use tokio::time::timeout;
-use std::time::Duration;
 
 #[derive(serde::Deserialize)]
 struct Auth {
@@ -73,15 +73,38 @@ fn wake_on_lan(profile: serde_json::Value) -> Result<(), String> {
 }
 
 #[tauri::command]
-async fn get_models(llm_address: String, auth: Option<Auth>) -> Result<String, String> {
+async fn get_models(
+    llm_address: String,
+    llm_port: u16,
+    auth: Option<Auth>,
+) -> Result<String, String> {
     println!("get_models called with address: {}", llm_address);
 
+    // TODO: Clean up the input validation, probably need to be when users enters the info
+
+    // Add http:// or https:// if not already included
     let address = if llm_address.starts_with("http://") || llm_address.starts_with("https://") {
         llm_address
     } else {
         format!("http://{}", llm_address)
     };
-    let url = format!("{}/api/tags", address.trim_end_matches('/'));
+
+    // Check if the address already has a port
+    let has_port = address
+        .trim_start_matches("http://")
+        .trim_start_matches("https://")
+        .contains(':');
+
+    let url = if has_port {
+        format!("{}/api/tags", address.trim_end_matches('/'))
+    } else {
+        format!(
+            "{}:{}/api/tags",
+            address.trim_end_matches('/'),
+            llm_port.to_string()
+        )
+    };
+
     println!("Full URL: {}", url);
 
     let client = reqwest::Client::builder()
