@@ -1,6 +1,11 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import ProfileForm from "../components/ProfileForm";
 
 export default function SettingsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const editingProfile = location.state?.profile;
+
   return (
     <div className="settings-page">
       <div className="settings-header">
@@ -11,7 +16,10 @@ export default function SettingsPage() {
         </p>
       </div>
       <div className="settings-form-container">
-        <ProfileForm />
+        <ProfileForm
+          profile={editingProfile}
+          onSave={() => navigate("/settings", { replace: true })}
+        />
       </div>
     </div>
   );

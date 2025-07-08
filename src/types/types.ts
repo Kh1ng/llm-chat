@@ -12,7 +12,7 @@ export type Profile = {
   auth?: Auth;
   macAddress?: string;
   broadcastAddress?: string;
-  port?: number;
+  port: number; // LLM server port, not WoL
   bindAddress?: string;
 };
 
@@ -39,4 +39,6 @@ export type ProfileCardProps = {
   onClick: () => void;
   isActive: boolean;
   onRefreshModels: () => void;
+  onEdit?: (profile: Profile) => void;
 };
+

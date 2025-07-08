@@ -1,65 +1,58 @@
-import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import SettingsPage from "./pages/SettingsPage";
-import { Profile } from "./types/types";
 import ChatPage from "./pages/ChatPage";
 import "./App.css";
 import { Toaster } from "sonner";
 import ThemeToggle from "./components/ThemeToggle";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 function App() {
-  const [view, setView] = useState<"landing" | "settings" | "chat">("landing");
-  const [chatProfile, setChatProfile] = useState<Profile | null>(null);
-  const [chatModel, setChatModel] = useState("");
-
   return (
-    <>
+    <BrowserRouter>
       <Toaster position="top-right" richColors closeButton expand />
       <header className="app-header">
         <div className="left">
-        {view === "landing" ? (
-          <div></div>
-        ) : (
-          <button onClick={() => setView("landing")} className="themed-button">
-            ←
-          </button>
-        )}
+          <BackButton />
         </div>
         <div className="centered">
-        <h1>Vellm</h1>
+          <h1>Vellm</h1>
         </div>
         <div className="right">
           <ThemeToggle />
         </div>
       </header>
-
-      {view === "landing" ? (
-        <div className="landing-page-wrapper">
-          <LandingPage
-            onOpenChat={(profile, model) => {
-              setChatProfile(profile);
-              setChatModel(model);
-              setView("chat");
-            }}
-          />
-          <div className="add-model-btn-wrapper">
-            <button
-              onClick={() => setView("settings")}
-              className="themed-button fill-width"
-            >
-              Add / Edit Models
-            </button>
-          </div>
-        </div>
-      ) : view === "settings" ? (
-        <SettingsPage />
-      ) : chatProfile && chatModel ? (
-        <ChatPage profile={chatProfile} model={chatModel} />
-      ) : (
-        <p>Missing chat context.</p>
-      )}
-    </>
+      <Routes>
+        <Route path="/" element={<LandingPageWrapper />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/chat" element={<ChatPageWrapper />} />
+      </Routes>
+    </BrowserRouter>
   );
+}
+
+function LandingPageWrapper() {
+  const navigate = useNavigate();
+  return <LandingPage onOpenChat={(profile, model) => navigate("/chat", { state: { profile, model } })} />;
+}
+
+function BackButton() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  if (location.pathname === "/") return <div></div>;
+  return (
+    <button onClick={() => navigate(-1)} className="themed-button">
+      ←
+    </button>
+  );
+}
+
+function ChatPageWrapper() {
+  const location = useLocation();
+  const { profile, model } = location.state || {};
+  if (profile && model) {
+    return <ChatPage profile={profile} model={model} />;
+  }
+  return <p>Missing chat context.</p>;
 }
 
 export default App;

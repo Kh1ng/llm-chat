@@ -28,3 +28,7 @@ PROJECT_OVERVIEW.md
 /src-tauri/Cargo.lock
 /src-tauri/target/
 
+# Apple stuff
+*.plist
+*.provisionprofile
+

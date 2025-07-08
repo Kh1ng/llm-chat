@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { updateProfileModels } from "../store/profileStore";
 import { ProfileCardProps } from "../types/types";
+import "../styles/buttons.css";
+import "../styles/cards.css";
 
-export default function ProfileCard(props: ProfileCardProps) {
+export default function ProfileCard(props: ProfileCardProps & { onEdit?: (profile: any) => void }) {
   const {
     profile,
     selectedModel,
@@ -123,6 +125,9 @@ useEffect(() => {
           </button>
           <button onClick={onOpenChat} className="profile-button open-chat" disabled={status !== "ready"}>
             Open Chat
+          </button>
+          <button onClick={() => props.onEdit && props.onEdit(profile)} className="profile-button">
+            Edit
           </button>
           {profile.macAddress && (
             <button

@@ -1,3 +1,7 @@
+@import url("./styles/buttons.css");
+@import url("./styles/cards.css");
+@import url("./styles/forms.css");
+
 body, html, #root {
   height: 100%;
   display: flex;
@@ -240,39 +244,6 @@ button {
   outline: none;
 }
 
-/* Themed input using CSS variables */
-.themed-input {
-  border-radius: 8px;
-  border: 1px solid var(--input-border);
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: var(--input-text);
-  background-color: var(--input-bg);
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  outline: none;
-}
-
-.themed-select {
-  border-radius: 8px;
-  border: 1px solid var(--input-border);
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: var(--input-text);
-  background-color: var(--input-bg);
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  outline: none;
-}
-
-.themed-input::placeholder {
-  color: var(--input-placeholder);
-}
-
 button {
   cursor: pointer;
 }
@@ -464,28 +435,6 @@ select:focus {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1rem;
-}
-
-.themed-button {
-  min-width: 110px;
-  padding: 10px 16px;
-  font-size: 0.95rem;
-  background-color: #2a2a2a;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  margin-top: 0.5rem;
-  height: 44px; /* Add this line to constrain button height */
-}
-
-.themed-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.themed-button:not(:disabled):hover {
-  background-color: #3a3a3a;
 }
 
 /* ===========================================================
@@ -789,24 +738,6 @@ body {
   height: calc(100vh - 120px); /* allow scrolling within visible space */
 }
 
-.profile-card-summary:focus {
-  outline: none;
-}
-
-.model-list {
-  max-height: calc(
-    100vh - 180px
-  ); /* adjusts to leave space for header/footer */
-  padding-right: 0.5rem;
-}
-
-.model-select-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
 /* Tidy up status indicator */
 .status-indicator {
   font-weight: bold;
@@ -815,41 +746,6 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-/* Group and space buttons consistently */
-.profile-button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-/* Match button appearance across app */
-.profile-button {
-  min-width: 110px;
-  padding: 10px 16px;
-  font-size: 0.95rem;
-  background-color: #2a2a2a;
-  color: white;
-  border: 1px solid #444;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-}
-
-.profile-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.profile-button:not(:disabled):hover {
-  background-color: #3a3a3a;
-}
-
-@media (min-width: 768px) {
-  .profile-card-content {
-    padding-left: 1.5rem;
-  }
 }
 
 /* ===========================================================
@@ -952,5 +848,39 @@ body {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+.add-profile-btn-bottom-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 2rem 0 1.5rem 0;
+  background: none;
+  z-index: 10;
+}
+
+.add-profile-btn-bottom {
+  min-width: 220px;
+  max-width: 90vw;
+  font-size: 1.1rem;
+  padding: 0.75rem 2.5rem;
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
+  transition: background 0.2s, color 0.2s;
+}
+
+@media (max-width: 600px) {
+  .add-profile-btn-bottom {
+    min-width: 140px;
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+  .add-profile-btn-bottom-wrapper {
+    padding: 1rem 0 0.75rem 0;
   }
 }
