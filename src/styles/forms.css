@@ -1,0 +1,45 @@
+/* Profile Form and input styles */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  background: var(--card-bg, #fff);
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
+  padding: 2rem 2.5rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.themed-input {
+  font-size: 1rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 1.2rem;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #0f0f0f;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  transition: border 0.2s;
+}
+.themed-input:focus {
+  border: 1.5px solid #24c8db;
+  outline: none;
+}
+.themed-input::placeholder {
+  color: #999;
+}
+@media (prefers-color-scheme: dark) {
+  .profile-form {
+    background: #232323;
+    color: #f6f6f6;
+    border: 1px solid #3a3a3a;
+  }
+  .themed-input {
+    background: #1a1a1a;
+    color: #f6f6f6;
+    border: 1px solid #3a3a3a;
+  }
+  .themed-input::placeholder {
+    color: #aaa;
+  }
+}

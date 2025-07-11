@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import LandingPage from "@/pages/LandingPage";
 import * as profileStore from "@/store/profileStore";
+import { renderWithProviders } from "../utils/renderWithProviders";
 
 vi.mock("@/store/profileStore", async () => {
   const actual = await vi.importActual<typeof profileStore>(
@@ -24,7 +25,7 @@ describe("Landing Profile Flow", () => {
     (
       profileStore.loadProfiles as unknown as ReturnType<typeof vi.fn>
     ).mockResolvedValue([]);
-    render(<LandingPage onOpenChat={() => {}} />);
+    renderWithProviders(<LandingPage onOpenChat={() => {}} />);
 
     await waitFor(() => {
       expect(screen.getByText(/No profiles available/i)).toBeInTheDocument();
@@ -37,7 +38,7 @@ describe("Landing Profile Flow", () => {
     ).mockResolvedValue([
       { name: "test", address: "localhost", models: ["mistral"] },
     ]);
-    render(<LandingPage onOpenChat={() => {}} />);
+    renderWithProviders(<LandingPage onOpenChat={() => {}} />);
 
     await waitFor(() => {
       expect(
@@ -64,7 +65,7 @@ describe("Landing Profile Flow", () => {
 
     const { invoke } = await import("@tauri-apps/api/core");
 
-    render(<LandingPage onOpenChat={() => {}} />);
+    renderWithProviders(<LandingPage onOpenChat={() => {}} />);
 
     const wakeButton = await screen.findByRole("button", { name: /Wake LLM/i });
     fireEvent.click(wakeButton);

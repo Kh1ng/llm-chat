@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { updateProfileModels } from "../store/profileStore";
 import { ProfileCardProps } from "../types/types";
+import "../styles/buttons.css";
+import "../styles/cards.css";
 
-export default function ProfileCard(props: ProfileCardProps) {
+export default function ProfileCard(props: ProfileCardProps & { onEdit?: (profile: any) => void }) {
   const {
     profile,
     selectedModel,
@@ -18,7 +20,7 @@ export default function ProfileCard(props: ProfileCardProps) {
   const { name, address, models } = profile;
   const [modelList, setModelList] = useState<string[]>(models);
   const [waking, setWaking] = useState(false);
-  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable">("unavailable");
+  const [status, setStatus] = useState<"checking" | "waking" | "ready" | "unavailable" | "error">("unavailable");
 
   const statusRef = useRef(status);
 
@@ -63,6 +65,7 @@ useEffect(() => {
   return () => {
     cancelled = true;
   };
+// eslint-disable-next-line react-hooks/exhaustive-deps  
 }, [isActive, waking]);
 
   return (
@@ -122,6 +125,9 @@ useEffect(() => {
           </button>
           <button onClick={onOpenChat} className="profile-button open-chat" disabled={status !== "ready"}>
             Open Chat
+          </button>
+          <button onClick={() => props.onEdit && props.onEdit(profile)} className="profile-button">
+            Edit
           </button>
           {profile.macAddress && (
             <button

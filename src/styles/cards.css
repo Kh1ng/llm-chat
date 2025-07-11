@@ -1,0 +1,68 @@
+/* Profile Card styles */
+.profile-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.profile-card[open] {
+  box-shadow: none;
+}
+.profile-card-summary {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 1.1rem 1.5rem;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: inherit;
+}
+.profile-card-content {
+  padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+  color: inherit;
+}
+.model-select-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.status-indicator {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.animated-dots span {
+  animation: blink 1.2s infinite both;
+  opacity: 0.7;
+}
+.animated-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.animated-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.2; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-card {
+    background: transparent;
+    border: none;
+    color: inherit;
+  }
+  .profile-card-summary {
+    color: inherit;
+  }
+  .profile-card-content {
+    color: inherit;
+  }
+}

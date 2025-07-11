@@ -22,6 +22,8 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
     // Add a placeholder response
     setMessages((prev) => [...prev, { sender: "llm", text: "..." }]);
 
+    // TODO: handle markdown/math jax + deepseek <thinking> response
+
     try {
       const reply = await invoke("send_prompt", {
         llmAddress: profile.address,
@@ -31,16 +33,19 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
 
       setMessages((prev) => {
         const withoutPending = prev.filter(
-          (msg, idx) => !(idx === prev.length - 1 && msg.text === "...")
+          (msg, idx) => !(idx === prev.length - 1 && msg.text === "..."),
         );
         return [...withoutPending, { sender: "llm", text: reply as string }];
       });
     } catch (err) {
       setMessages((prev) => {
         const withoutPending = prev.filter(
-          (msg, idx) => !(idx === prev.length - 1 && msg.text === "...")
+          (msg, idx) => !(idx === prev.length - 1 && msg.text === "..."),
         );
-        return [...withoutPending, { sender: "llm", text: "⚠️ Failed to get response." }];
+        return [
+          ...withoutPending,
+          { sender: "llm", text: "⚠️ Failed to get response." },
+        ];
       });
       console.error("LLM request failed:", err);
     }
@@ -65,7 +70,7 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
       <p>
         Using profile: {profile.name} ({profile.address})
       </p>
-      <button onClick={() => setMessages([])} className="clear-chat-button">
+      <button onClick={() => setMessages([])} className="themed-button">
         Clear Chat
       </button>
       <div className="chat-history chat-history-flex">
@@ -107,7 +112,9 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
             }
           }}
         />
-        <button className="themed-button" type="submit">Send</button>
+        <button className="themed-button" type="submit">
+          Send
+        </button>
       </form>
     </div>
   );
