@@ -30,6 +30,7 @@ copilot-instructions.md
 # Tauri stuff
 /src-tauri/Cargo.lock
 /src-tauri/target/
+<<<<<<< HEAD
 
 # Apple stuff
 *.plist
