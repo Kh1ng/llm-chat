@@ -22,7 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#copilot
 PROJECT_OVERVIEW.md
+copilot-instructions.md
 
 # Tauri stuff
 /src-tauri/Cargo.lock
@@ -31,4 +34,3 @@ PROJECT_OVERVIEW.md
 # Apple stuff
 *.plist
 *.provisionprofile
-
