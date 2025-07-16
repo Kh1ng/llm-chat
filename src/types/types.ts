@@ -12,7 +12,7 @@ export type Profile = {
   auth?: Auth;
   macAddress?: string;
   broadcastAddress?: string;
-  port: number; // LLM server port, not WoL
+  port: number;
   bindAddress?: string;
 };
 

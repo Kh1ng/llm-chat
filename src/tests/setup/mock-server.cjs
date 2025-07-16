@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -116,28 +114,6 @@ app.post("/wake", (req, res) => {
 
   console.log(`Simulated Wake-on-LAN packet sent to ${profile.macAddress}`);
   res.json({ success: true, message: "Magic packet sent (simulated)." });
-});
-
-app.post("/save-profile", (req, res) => {
-  const profile = req.body;
-
-  if (!profile || !profile.name || !profile.address) {
-    return res.status(400).json({ error: "Profile name and address are required" });
-  }
-
-  console.log(`Profile saved: ${JSON.stringify(profile)}`);
-  res.json({ success: true, message: "Profile saved successfully" });
-});
-
-app.post("/send-message", (req, res) => {
-  const { address, prompt } = req.body;
-
-  if (!address || !prompt) {
-    return res.status(400).json({ error: "Address and prompt are required" });
-  }
-
-  console.log(`Message sent to ${address}: ${prompt}`);
-  res.json({ success: true, message: `You said: ${prompt}` });
 });
 
 app.listen(11434, () => {

@@ -172,14 +172,15 @@ export default function ProfileForm({
                 showHeaderPreview
               />
             )}
-            <label>
-              <input
-                type="checkbox"
-                checked={useWakeOnLan}
-                onChange={(e) => setUseWakeOnLan(e.target.checked)}
-              />
+            <label htmlFor="wakeOnLanCheckbox">
               Enable Wake-on-LAN
             </label>
+            <input
+              id="wakeOnLanCheckbox"
+              type="checkbox"
+              checked={useWakeOnLan}
+              onChange={(e) => setUseWakeOnLan(e.target.checked)}
+            />
           </>
         )}
         {useWakeOnLan && (

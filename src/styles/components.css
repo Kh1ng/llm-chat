@@ -1,0 +1,65 @@
+/* Base button styles */
+.themed-button {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-colors;
+  @apply bg-[var(--bg-secondary)] text-[var(--text-primary)];
+  @apply border border-[var(--overlay-light)];
+  @apply hover:bg-[var(--overlay-light)] hover:border-[var(--overlay-medium)];
+  @apply active:bg-[var(--overlay-medium)];
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Profile button styles */
+.profile-button {
+  @apply inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-medium transition-colors;
+  @apply bg-[var(--bg-secondary)] text-[var(--text-primary)];
+  @apply border border-[var(--overlay-light)];
+  @apply hover:bg-[var(--overlay-light)] hover:border-[var(--overlay-medium)];
+  @apply active:bg-[var(--overlay-medium)];
+}
+
+.profile-button-group {
+  @apply flex flex-wrap gap-2;
+}
+
+/* Ghost button variant */
+.themed-button[data-variant="ghost"] {
+  @apply border-transparent bg-transparent;
+  @apply hover:bg-[var(--overlay-light)] hover:border-transparent;
+  @apply active:bg-[var(--overlay-medium)];
+}
+
+/* Form controls */
+select,
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+  @apply w-full px-3 py-2 bg-bg-primary border border-overlay-light rounded-lg;
+  @apply text-text-primary placeholder:text-text-muted;
+  @apply focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Status indicators */
+.status-indicator {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-indicator[data-status="ready"] {
+  @apply bg-green-400;
+}
+
+.status-indicator[data-status="checking"] {
+  @apply bg-yellow-400 animate-pulse;
+}
+
+.status-indicator[data-status="waking"] {
+  @apply bg-blue-400 animate-pulse;
+}
+
+.status-indicator[data-status="unavailable"] {
+  @apply bg-red-400;
+}
+
+.status-indicator[data-status="error"] {
+  @apply bg-red-400;
+}

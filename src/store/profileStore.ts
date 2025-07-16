@@ -38,3 +38,23 @@ export async function saveOrUpdateProfile(profile: Profile) {
   ];
   await saveProfiles(updated);
 }
+
+export async function sendWakePacket(profile: Profile): Promise<string> {
+  if (!profile.macAddress) {
+    throw new Error("MAC address is required to send a wake packet.");
+  }
+
+  // Simulate sending a wake packet
+  console.log(`Sending wake packet to ${profile.macAddress}`);
+  return "Magic packet sent!";
+}
+
+export async function sendMessage(address: string, prompt: string): Promise<string> {
+  if (!address || !prompt) {
+    throw new Error("Address and prompt are required to send a message.");
+  }
+
+  // Simulate sending a message to the LLM
+  console.log(`Sending message to ${address}: ${prompt}`);
+  return `You said: ${prompt}`;
+}
