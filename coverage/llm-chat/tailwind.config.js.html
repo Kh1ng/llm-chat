@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for llm-chat/src/pages/SettingsPage.tsx</title>
+    <title>Code coverage report for llm-chat/tailwind.config.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">llm-chat/src/pages</a> SettingsPage.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">llm-chat</a> tailwind.config.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/24</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/24</span>
             </div>
         
             
@@ -88,21 +88,7 @@
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -113,33 +99,44 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { useLocation, useNavigate } from "react-router-dom";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import ProfileForm from "../components/ProfileForm";</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import typography from '@tailwindcss/typography';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default function SettingsPage() {</span>
-<span class="cstat-no" title="statement not covered" >  const location = useLocation();</span>
-<span class="cstat-no" title="statement not covered" >  const navigate = useNavigate();</span>
-<span class="cstat-no" title="statement not covered" >  const editingProfile = location.state?.profile;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div className="settings-page"&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="settings-header"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;h2&gt;Manage Profiles&lt;/h2&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p&gt;</span>
-          Add a new profile by entering a name and an LLM URL or IP. This will
-          fetch available models and save them locally.
-<span class="cstat-no" title="statement not covered" >        &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className="settings-form-container"&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;ProfileForm</span>
-<span class="cstat-no" title="statement not covered" >          profile={editingProfile}</span>
-<span class="cstat-no" title="statement not covered" >          onSave={() =&gt; navigate("/settings", { replace: true })}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-  );
+<span class="cstat-no" title="statement not covered" >/** @type {import('tailwindcss').Config} */</span>
+<span class="cstat-no" title="statement not covered" >export default {</span>
+<span class="cstat-no" title="statement not covered" >  content: [</span>
+<span class="cstat-no" title="statement not covered" >    "./index.html",</span>
+<span class="cstat-no" title="statement not covered" >    "./src/**/*.{js,ts,jsx,tsx}",</span>
+<span class="cstat-no" title="statement not covered" >  ],</span>
+<span class="cstat-no" title="statement not covered" >  darkMode: 'class',</span>
+<span class="cstat-no" title="statement not covered" >  theme: {</span>
+<span class="cstat-no" title="statement not covered" >    extend: {</span>
+<span class="cstat-no" title="statement not covered" >      colors: {</span>
+<span class="cstat-no" title="statement not covered" >        accent: {</span>
+<span class="cstat-no" title="statement not covered" >          DEFAULT: 'rgb(var(--accent))',</span>
+<span class="cstat-no" title="statement not covered" >          subtle: 'rgb(var(--accent-subtle))',</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      fontFamily: {</span>
+<span class="cstat-no" title="statement not covered" >        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],</span>
+<span class="cstat-no" title="statement not covered" >        mono: ['SF Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  plugins: [typography],</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -150,14 +147,14 @@
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
                 at 2025-07-16T15:36:16.043Z
             </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     

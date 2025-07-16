@@ -32,14 +32,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
@@ -143,7 +143,10 @@
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,6 +159,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -224,18 +228,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
-import type { Profile, Auth } from "../types/types";
+import type { Auth } from "../types/types";
 &nbsp;
 interface AuthBuilderProps {
   auth?: Auth;
+  // eslint-disable-next-line no-unused-vars
   onChange: (auth: Auth) =&gt; void;
   showHeaderPreview?: boolean;
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default function AuthBuilder({ auth, onChange, showHeaderPreview = false }: AuthBuilderProps) {</span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export default function AuthBuilder({ auth, onChange, showHeaderPreview = false }: AuthBuilderProps) {</span></span>
 <span class="cstat-no" title="statement not covered" >  const type = auth?.type || "bearer";</span>
 <span class="cstat-no" title="statement not covered" >  const value = auth?.value || "";</span>
 <span class="cstat-no" title="statement not covered" >  const headerName = auth?.headerName || "";</span>
+&nbsp;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  const handleTypeChange = (e: React.ChangeEvent&lt;HTMLSelectElement&gt;) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const newType = e.target.value as Auth["type"];</span>
@@ -277,7 +283,7 @@ interface AuthBuilderProps {
 <span class="cstat-no" title="statement not covered" >    &lt;div className="auth-builder"&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;label&gt;</span>
         Auth Type:
-<span class="cstat-no" title="statement not covered" >        &lt;select value={type} onChange={handleTypeChange}&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;select value={type} onChange={handleTypeChange} className="themed-select"&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;option value="bearer"&gt;Bearer&lt;/option&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;option value="basic"&gt;Basic&lt;/option&gt;</span>
 <span class="cstat-no" title="statement not covered" >          &lt;option value="custom"&gt;Custom&lt;/option&gt;</span>
@@ -293,7 +299,7 @@ interface AuthBuilderProps {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      &lt;label&gt;</span>
         Token / Credentials:
-<span class="cstat-no" title="statement not covered" >        &lt;input type="text" value={value} onChange={handleValueChange} placeholder="your token..." /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;input type="text" value={value} onChange={handleValueChange} placeholder="your token..." className="themed-input"/&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;/label&gt;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      {showHeaderPreview &amp;&amp; value &amp;&amp; (</span>
@@ -310,7 +316,7 @@ interface AuthBuilderProps {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-13T16:47:45.302Z
+                at 2025-07-16T15:36:16.043Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

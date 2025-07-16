@@ -140,6 +140,38 @@ app.post("/send-message", (req, res) => {
   res.json({ success: true, message: `You said: ${prompt}` });
 });
 
-app.listen(11434, () => {
-  console.log("🚀 Test API running at http://localhost:11434");
-});
+let server;
+
+async function startTestServer() {
+  return new Promise((resolve) => {
+    server = app.listen(11434, () => {
+      console.log("🚀 Test API running at http://localhost:11434");
+      resolve({ url: "http://localhost:11434" });
+    });
+  });
+}
+
+async function stopTestServer() {
+  return new Promise((resolve) => {
+    if (server) {
+      server.close(() => {
+        console.log("Test server stopped");
+        resolve();
+      });
+    } else {
+      resolve();
+    }
+  });
+}
+
+module.exports = {
+  startTestServer,
+  stopTestServer,
+};
+
+// Auto-start server if running directly
+if (require.main === module) {
+  app.listen(11434, () => {
+    console.log("🚀 Test API running at http://localhost:11434");
+  });
+}
