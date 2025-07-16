@@ -7,6 +7,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./tests/setup/mock-server.cjs",
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
+    exclude: ["src/tests/**/*"],
     coverage: {
       exclude: ["src-tauri/target/**", "**/__global-api-script.js"],
     },
