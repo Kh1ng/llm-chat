@@ -72,7 +72,7 @@ export default function ProfileForm({
       // Compose address with port if not already present
       let addressWithPort = address;
       if (port && !/:[0-9]+$/.test(address)) {
-        addressWithPort = address.replace(/:\d+$/, "") + ":" + port;
+        addressWithPort = address + ":" + port;
       }
       const modelsJson = await Promise.race([
         invoke("get_models", { llmAddress: addressWithPort }),

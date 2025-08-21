@@ -1,23 +1,82 @@
 @import url("./styles/buttons.css");
 @import url("./styles/cards.css");
 @import url("./styles/forms.css");
+@import url("./styles/components.css");
+@import url("./styles/chat.css");
 
+/* Full Height App Structure */
 body, html, #root {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
+/* ========================================================== 
+   Mobile-First Design System - CSS Variables
+========================================================== */
 :root {
-  /* Root / Global */
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
+  /* Typography */
+  --font-family: Inter, system-ui, -apple-system, sans-serif;
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  
+  /* Spacing Scale */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 0.75rem;   /* 12px */
+  --space-lg: 1rem;      /* 16px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.75rem;  /* 12px */
+  
+  /* Colors - Dark Theme (Mobile First) */
+  --bg-primary: rgb(13, 17, 23);        /* Deep dark background */
+  --bg-secondary: rgb(22, 27, 34);      /* Secondary surfaces */
+  --accent: rgb(0, 128, 128);           /* Teal accent */
+  --accent-hover: rgb(0, 115, 115);     /* Darker teal for hover */
+  --accent-subtle: rgba(0, 128, 128, 0.2); /* Subtle accent highlights */
+  
+  /* Text Colors */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Interactive Overlays */
+  --overlay-light: rgba(255, 255, 255, 0.1);
+  --overlay-medium: rgba(255, 255, 255, 0.15);
+  --overlay-dark: rgba(13, 17, 23, 0.95);
+  
+  /* Base Typography Settings */
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  line-height: 1.5;
   font-weight: 400;
-
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  
+  /* Rendering Optimizations */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -117,27 +176,18 @@ body, html, #root {
   justify-content: center;
 }
 
-.chat-page {
-  padding: 1rem;
-}
-
-.chat-page, .settings-page {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
 .settings-page {
-  padding: 2rem 1.5rem;
+  flex: 1;
+  padding: var(--space-lg) var(--space-lg) var(--space-2xl) var(--space-lg);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 800px;
+  max-width: 600px;
   width: 100%;
   text-align: center;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .settings-page > p {
@@ -148,15 +198,22 @@ body, html, #root {
 
 .settings-header {
   width: 100%;
-  padding: 0 1.5rem;
-  box-sizing: border-box;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-xl);
+}
+
+.settings-header h2 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
 }
 
 .settings-header p {
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
@@ -165,8 +222,9 @@ body, html, #root {
 .settings-form-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  min-width: 40%;
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: 500px;
 }
 
 .chat-history-flex {
@@ -623,10 +681,6 @@ body {
     width: 100%;
   }
 
-  .chat-page {
-    padding: 0.75rem;
-  }
-
   .chat-bubble.user,
   .chat-bubble.llm {
     max-width: 90%;
@@ -731,11 +785,14 @@ body {
 
 .landing-page {
   flex: 1;
-  max-width: 800px;
-  margin: 0 1rem;
-  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-lg);
   overflow-y: auto;
-  height: calc(100vh - 120px); /* allow scrolling within visible space */
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Tidy up status indicator */
@@ -788,37 +845,185 @@ body {
 /* ===========================================================
    Heading Styles
 =========================================================== */
-.app-header {
+/* New Main Header Styles */
+.main-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 1rem;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-lg);
+  border-bottom: 1px solid var(--overlay-light);
+  background-color: var(--bg-primary);
+  min-height: 64px;
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: transparent;
   z-index: 10;
 }
 
-.app-header .centered {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Inter', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(270deg, #00f2c3, #06c1a0, #048079);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: fadeInScale 0.6s ease-out, gradientShift 8s ease infinite;
+/* Safe area support for iOS */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .main-header {
+    padding-top: calc(var(--space-lg) + env(safe-area-inset-top));
+  }
 }
 
-.app-header .left,
-.app-header .right {
+/* Chat page specific main header - minimal styling */
+.chat-main-header {
+  min-height: 0;
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: none;
+  background-color: var(--bg-primary);
+  z-index: 10;
+  position: relative;
+}
+
+/* Chat header navigation with inline back button */
+.chat-header-nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-md);
+}
+
+/* Chat navigation info inline with back button */
+.chat-nav-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.chat-nav-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.chat-nav-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+/* Compact back button for chat page */
+.chat-main-header .themed-button {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-md);
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-light);
+  border: 1px solid var(--overlay-medium);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.chat-main-header .themed-button:hover {
+  background: var(--overlay-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsive back button */
+@media (max-width: 768px) {
+  .chat-main-header .themed-button {
+    min-width: 28px;
+    height: 28px;
+    padding: var(--space-xs);
+  }
+  
+  .chat-main-header .themed-button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.chat-main-header .header-left,
+.chat-main-header .header-right,
+.chat-main-header .header-center {
+  width: auto;
+}
+
+.chat-main-header .header-left {
+  flex: 1;
+}
+
+.chat-main-header .header-center,
+.chat-main-header .header-right {
+  flex: 0;
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  .chat-main-header {
+    padding-top: calc(var(--space-sm) + env(safe-area-inset-top));
+  }
+}
+
+.header-left,
+.header-right {
   width: 80px;
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+.header-left {
+  justify-content: flex-start;
+}
+
+.header-right {
+  justify-content: flex-end;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, var(--accent), #00e6cc, #00b3a6);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Mobile adjustments for title */
+@media (max-width: 768px) {
+  .app-title {
+    font-size: 2rem;
+  }
+  
+  .main-header {
+    padding: var(--space-md);
+    min-height: 56px;
+  }
+  
+  .header-left,
+  .header-right {
+    width: 60px;
+  }
+  
+  /* Mobile safe area adjustments */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .main-header {
+      padding-top: calc(var(--space-md) + env(safe-area-inset-top));
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.75rem;
+  }
 }
 
 @keyframes fadeInScale {
@@ -864,6 +1069,11 @@ body {
   z-index: 10;
 }
 
+/* Hide the fixed add profile button on chat page */
+.chat-route .add-profile-btn-bottom-wrapper {
+  display: none;
+}
+
 .add-profile-btn-bottom {
   min-width: 220px;
   max-width: 90vw;
@@ -882,5 +1092,27 @@ body {
   }
   .add-profile-btn-bottom-wrapper {
     padding: 1rem 0 0.75rem 0;
+  }
+}
+
+/* =========================================================== 
+   iOS Safe Area Support for Toast and Settings
+=========================================================== */
+
+/* Toast notifications safe area */
+@supports (padding-top: env(safe-area-inset-top)) {
+  [data-sonner-toaster] {
+    top: calc(1rem + env(safe-area-inset-top)) !important;
+  }
+}
+
+/* Settings page safe area support */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .settings-page {
+    padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
+  }
+  
+  .settings-form-container {
+    margin-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
   }
 }

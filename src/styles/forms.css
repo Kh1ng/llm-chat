@@ -1,45 +1,87 @@
-/* Profile Form and input styles */
+/* ========================================================== 
+   Modern Profile Form Styles
+========================================================== */
+
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  background: var(--card-bg, #fff);
-  border-radius: 1.2rem;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07);
-  padding: 2rem 2.5rem;
-  max-width: 480px;
+  gap: var(--space-lg);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--overlay-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  max-width: 500px;
   margin: 0 auto;
 }
+
+/* Themed input styles that integrate with the design system */
 .themed-input {
-  font-size: 1rem;
-  padding: 0.7rem 1.2rem;
-  border-radius: 1.2rem;
-  border: 1px solid #e0e0e0;
-  background: #fff;
-  color: #0f0f0f;
-  margin-top: 0.2rem;
-  margin-bottom: 0.2rem;
-  transition: border 0.2s;
+  width: 100%;
+  padding: var(--space-md);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--overlay-light);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-family: inherit;
+  min-height: 44px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
+
 .themed-input:focus {
-  border: 1.5px solid #24c8db;
   outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
+
+.themed-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .themed-input::placeholder {
-  color: #999;
+  color: var(--text-muted);
 }
-@media (prefers-color-scheme: dark) {
+
+/* Form labels */
+.profile-form label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  margin-bottom: var(--space-xs);
+}
+
+/* Checkbox styles */
+.profile-form input[type="checkbox"] {
+  width: auto;
+  min-height: auto;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* Advanced settings section */
+.profile-form .advanced-section {
+  padding: var(--space-lg);
+  background-color: var(--overlay-light);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--overlay-medium);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
   .profile-form {
-    background: #232323;
-    color: #f6f6f6;
-    border: 1px solid #3a3a3a;
+    padding: var(--space-lg);
+    margin: 0 var(--space-md);
   }
-  .themed-input {
-    background: #1a1a1a;
-    color: #f6f6f6;
-    border: 1px solid #3a3a3a;
-  }
-  .themed-input::placeholder {
-    color: #aaa;
+}
+
+@media (max-width: 480px) {
+  .profile-form {
+    padding: var(--space-md);
+    gap: var(--space-md);
   }
 }

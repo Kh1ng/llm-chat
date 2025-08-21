@@ -1,65 +1,173 @@
+/* ========================================================== 
+   Mobile-First Component System
+========================================================== */
+
 /* Base button styles */
 .themed-button {
-  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-colors;
-  @apply bg-[var(--bg-secondary)] text-[var(--text-primary)];
-  @apply border border-[var(--overlay-light)];
-  @apply hover:bg-[var(--overlay-light)] hover:border-[var(--overlay-medium)];
-  @apply active:bg-[var(--overlay-medium)];
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: var(--text-base);
+  transition: all 0.2s ease;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--overlay-light);
+  cursor: pointer;
+  min-height: 44px; /* Touch-friendly */
+}
+
+.themed-button:hover {
+  background-color: var(--overlay-light);
+  border-color: var(--overlay-medium);
+}
+
+.themed-button:active {
+  background-color: var(--overlay-medium);
+  transform: translateY(1px);
+}
+
+.themed-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Profile button styles */
 .profile-button {
-  @apply inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-medium transition-colors;
-  @apply bg-[var(--bg-secondary)] text-[var(--text-primary)];
-  @apply border border-[var(--overlay-light)];
-  @apply hover:bg-[var(--overlay-light)] hover:border-[var(--overlay-medium)];
-  @apply active:bg-[var(--overlay-medium)];
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--overlay-light);
+  cursor: pointer;
+  min-height: 40px;
+}
+
+.profile-button:hover {
+  background-color: var(--overlay-light);
+  border-color: var(--overlay-medium);
+}
+
+.profile-button:active {
+  background-color: var(--overlay-medium);
 }
 
 .profile-button-group {
-  @apply flex flex-wrap gap-2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
 }
 
 /* Ghost button variant */
 .themed-button[data-variant="ghost"] {
-  @apply border-transparent bg-transparent;
-  @apply hover:bg-[var(--overlay-light)] hover:border-transparent;
-  @apply active:bg-[var(--overlay-medium)];
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.themed-button[data-variant="ghost"]:hover {
+  background-color: var(--overlay-light);
+  border-color: transparent;
+}
+
+.themed-button[data-variant="ghost"]:active {
+  background-color: var(--overlay-medium);
+}
+
+/* Accent button variant */
+.themed-button[data-variant="accent"] {
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+}
+
+.themed-button[data-variant="accent"]:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 /* Form controls */
 select,
 input[type="text"],
 input[type="number"],
-input[type="password"] {
-  @apply w-full px-3 py-2 bg-bg-primary border border-overlay-light rounded-lg;
-  @apply text-text-primary placeholder:text-text-muted;
-  @apply focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: var(--space-md);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--overlay-light);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-family: inherit;
+  min-height: 44px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+select:disabled,
+input:disabled,
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
 }
 
 /* Status indicators */
 .status-indicator {
-  @apply w-2 h-2 rounded-full;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 .status-indicator[data-status="ready"] {
-  @apply bg-green-400;
+  background-color: #10b981; /* Green */
 }
 
 .status-indicator[data-status="checking"] {
-  @apply bg-yellow-400 animate-pulse;
+  background-color: #f59e0b; /* Yellow */
+  animation: pulse 1s infinite;
 }
 
 .status-indicator[data-status="waking"] {
-  @apply bg-blue-400 animate-pulse;
+  background-color: #3b82f6; /* Blue */
+  animation: pulse 1s infinite;
 }
 
-.status-indicator[data-status="unavailable"] {
-  @apply bg-red-400;
-}
-
+.status-indicator[data-status="unavailable"],
 .status-indicator[data-status="error"] {
-  @apply bg-red-400;
+  background-color: #ef4444; /* Red */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }

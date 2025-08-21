@@ -26,32 +26,86 @@
   }
 }
 
-.profile-button-group .profile-button {
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
+.profile-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
 }
 
 .profile-button {
-  font-size: 0.95rem;
-  padding: 0.5rem 1.2rem;
-  border-radius: 1.2rem;
-  border: 1px solid #e0e0e0;
-  background: #fff;
-  color: #0f0f0f;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--overlay-light);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.profile-button:hover {
-  background: #f0f0f0;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  .profile-button {
-    background: #232323;
-    color: #f6f6f6;
-    border: 1px solid #3a3a3a;
+.profile-button:hover:not(:disabled) {
+  background: var(--overlay-light);
+  border-color: var(--overlay-medium);
+}
+
+.profile-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Open Chat button - prominent and centered */
+.profile-button.open-chat {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-size: var(--text-base);
+  font-weight: 600;
+  min-height: 48px;
+  width: 100%;
+}
+
+.profile-button.open-chat:hover:not(:disabled) {
+  background: var(--accent);
+  filter: brightness(1.1);
+}
+
+/* Secondary buttons container - 2x2 grid layout */
+.secondary-buttons {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Small secondary buttons */
+.profile-button-small {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 6px 12px;
+  min-height: 32px;
+  text-align: center;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Only stack on very small screens */
+@media (max-width: 320px) {
+  .secondary-buttons {
+    flex-direction: column !important;
+    gap: 4px;
   }
-  .profile-button:hover {
-    background: #333;
+  
+  .profile-button-small {
+    flex: none;
+    width: 100%;
+    max-width: none;
   }
 }

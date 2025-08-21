@@ -29,7 +29,8 @@
     "icon": [],
     "category": "Utility",
     "iOS": {
-      "bundleVersion": "0.1.0"
+      "bundleVersion": "0.1.0",
+      "developmentTeam": "Z49TD63LCM"
     },
     "macOS": {
       "entitlements": "./Entitlements.plist",

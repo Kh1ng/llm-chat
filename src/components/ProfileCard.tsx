@@ -79,7 +79,10 @@ useEffect(() => {
         }}
         tabIndex={0}
       >
-        {name} — {address}
+        <div className="profile-summary-content">
+          <h2 className="profile-name">{name}</h2>
+          <h4 className="profile-address">{address.replace(/:\d+$/, '')}</h4>
+        </div>
       </summary>
       <div className="profile-card-content">
         <div className="model-select-row">
@@ -118,22 +121,22 @@ useEffect(() => {
             )}
           </div>
         </div>
-        <br />
         <div className="profile-button-group">
-          <button onClick={onRemove} className="profile-button">
-            Remove
-          </button>
           <button onClick={onOpenChat} className="profile-button open-chat" disabled={status !== "ready"}>
             Open Chat
           </button>
-          <button onClick={() => props.onEdit && props.onEdit(profile)} className="profile-button">
-            Edit
-          </button>
-          {profile.macAddress && (
-            <button
-              className="profile-button"
-              disabled={waking}
-              onClick={async () => {
+          <div className="secondary-buttons">
+            <button onClick={onRemove} className="profile-button profile-button-small">
+              Remove
+            </button>
+            <button onClick={() => props.onEdit && props.onEdit(profile)} className="profile-button profile-button-small">
+              Edit
+            </button>
+            {profile.macAddress && (
+              <button
+                className="profile-button profile-button-small"
+                disabled={waking}
+                onClick={async () => {
                 console.log("Sending magic packet...");
                 setWaking(true);
                 setStatus("waking");
@@ -222,28 +225,29 @@ useEffect(() => {
               )}
             </button>
           )}
-          <button
-            className="profile-button"
-            disabled={waking}
-            onClick={() => {
-              console.log("Refreshing models...");
-              setStatus("checking");
-              Promise.resolve(onRefreshModels())
-                .then((result) => {
-                  if (Array.isArray(result) && result.length > 0) {
-                    setStatus("ready");
-                  } else {
+            <button
+              className="profile-button profile-button-small"
+              disabled={waking}
+              onClick={() => {
+                console.log("Refreshing models...");
+                setStatus("checking");
+                Promise.resolve(onRefreshModels())
+                  .then((result) => {
+                    if (Array.isArray(result) && result.length > 0) {
+                      setStatus("ready");
+                    } else {
+                      setStatus("unavailable");
+                    }
+                  })
+                  .catch((err) => {
+                    console.error("Refresh models failed:", err);
                     setStatus("unavailable");
-                  }
-                })
-                .catch((err) => {
-                  console.error("Refresh models failed:", err);
-                  setStatus("unavailable");
-                });
-            }}
-          >
-            Refresh Models
-          </button>
+                  });
+              }}
+            >
+              Refresh Models
+            </button>
+          </div>
         </div>
       </div>
     </details>
