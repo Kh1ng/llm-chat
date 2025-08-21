@@ -30,8 +30,14 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
     }
 
     try {
+      // Construct full address with port if needed
+      const fullAddress = profile.address.includes(':') 
+        ? profile.address 
+        : `${profile.address}:${profile.port}`;
+        
       const reply = await invoke("send_prompt", {
-        llmAddress: profile.address,
+        llmAddress: fullAddress,
+        auth: profile.auth,
         model,
         prompt: userMessage,
       });
@@ -58,7 +64,16 @@ export default function ChatPage({ profile, model }: ChatPageProps) {
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      // Use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ 
+          behavior: "smooth",
+          block: "end",
+          inline: "nearest"
+        });
+      }, 100);
+    }
   }, [messages]);
 
   // Click outside to close settings

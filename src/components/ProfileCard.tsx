@@ -157,6 +157,8 @@ useEffect(() => {
                     try {
                       modelsJson = await invoke("get_models", {
                         llmAddress: profile.address,
+                        llmPort: profile.port,
+                        auth: profile.auth,
                       });
                       console.log("Raw modelsJson result:", modelsJson);
 
