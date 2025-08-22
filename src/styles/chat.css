@@ -315,79 +315,188 @@
   gap: var(--space-xs);
 }
 
-/* Settings Dropdown Button */
-.settings-button {
+/* RAG Status Indicator */
+.rag-indicator {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: var(--radius-sm);
-  background-color: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.settings-button:hover {
-  background-color: var(--overlay-light);
-  color: var(--text-secondary);
-}
-
-/* Send Button - Copilot Style */
-.send-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
+  gap: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  background-color: rgba(var(--accent-rgb, 0, 128, 128), 0.15);
+  border: 1px solid rgba(var(--accent-rgb, 0, 128, 128), 0.3);
   border-radius: var(--radius-md);
-  background-color: var(--accent);
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  cursor: help;
+}
+
+.rag-indicator svg {
+  color: var(--accent) !important;
+  stroke: var(--accent) !important;
   flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
-  font-weight: bold;
 }
 
-.send-button span {
-  color: #ffffff;
-  font-size: 16px;
-  line-height: 1;
+.rag-indicator span {
+  color: var(--accent);
+  font-size: 10px;
 }
 
-.send-button svg {
-  color: #ffffff;
-  stroke: #ffffff;
+/* RAG Tooltip */
+.rag-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--overlay-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  min-width: 250px;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
-.send-button:hover:not(:disabled) {
-  background-color: var(--accent);
-  filter: brightness(1.1);
-  transform: scale(1.05);
+.rag-indicator:hover .rag-tooltip {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.send-button:disabled {
-  background-color: var(--overlay-medium);
-  color: var(--text-muted);
-  cursor: not-allowed;
-  transform: none;
-  filter: none;
+.rag-tooltip strong {
+  display: block;
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  text-transform: none;
+  letter-spacing: normal;
 }
 
-.send-button:disabled span {
-  color: var(--text-muted);
+.rag-tooltip p {
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  margin: 0 0 var(--space-xs) 0;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: normal;
 }
 
-.send-button:disabled svg {
-  color: var(--text-muted);
-  stroke: var(--text-muted);
+.rag-tooltip p:last-child {
+  margin-bottom: 0;
+}
+
+/* Tooltip arrow */
+.rag-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--overlay-light);
+}
+
+.rag-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--bg-primary);
+  z-index: 1;
+}
+
+/* Settings Dropdown Button - Override global styles */
+.chat-container .settings-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  box-shadow: none !important;
+}
+
+.chat-container .settings-button:hover {
+  background-color: var(--overlay-light) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Send Button - Copilot Style with strong overrides */
+.chat-container .send-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+}
+
+.chat-container .send-button span {
+  color: #ffffff !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.chat-container .send-button svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.chat-container .send-button:hover:not(:disabled) {
+  background-color: var(--accent) !important;
+  filter: brightness(1.1) !important;
+  transform: scale(1.05) !important;
+}
+
+.chat-container .send-button:disabled {
+  background-color: var(--overlay-medium) !important;
+  color: var(--text-muted) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.chat-container .send-button:disabled span {
+  color: var(--text-muted) !important;
+}
+
+.chat-container .send-button:disabled svg {
+  color: var(--text-muted) !important;
+  stroke: var(--text-muted) !important;
 }
 
 /* Settings Dropdown */
@@ -420,6 +529,274 @@
 
 .settings-dropdown button:hover {
   background-color: var(--overlay-light);
+}
+
+/* RAG Toggle Styles */
+.rag-toggle-container {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--overlay-light);
+  margin: calc(var(--space-sm) * -1) calc(var(--space-md) * -1) var(--space-sm) calc(var(--space-md) * -1);
+}
+
+.rag-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.rag-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.rag-toggle-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 500;
+}
+
+.rag-toggle-text svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.rag-toggle-label:hover .rag-toggle-text {
+  color: var(--accent);
+}
+
+/* Documents Button - Override global styles */
+.chat-container .documents-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  box-shadow: none !important;
+}
+
+.chat-container .documents-button:hover {
+  background-color: var(--overlay-light) !important;
+  color: var(--text-secondary) !important;
+}
+
+.document-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Documents Dropdown */
+.documents-dropdown {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: var(--space-sm);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--overlay-light);
+  border-radius: var(--radius-md);
+  min-width: 280px;
+  max-width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.documents-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--overlay-light);
+  background-color: var(--bg-primary);
+}
+
+.documents-header span {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.documents-dropdown .upload-btn-small {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  background-color: var(--accent) !important;
+  color: white !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+.documents-dropdown .upload-btn-small svg {
+  width: 14px !important;
+  height: 14px !important;
+  color: white !important;
+  stroke: white !important;
+  stroke-width: 2.5 !important;
+  fill: none !important;
+}
+
+.documents-dropdown .upload-btn-small:hover:not(:disabled) {
+  background-color: var(--accent-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.documents-dropdown .upload-btn-small:disabled {
+  background-color: var(--overlay-medium) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.spinner-small {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-top: 1.5px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.documents-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--space-xs);
+}
+
+.document-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.document-item:hover {
+  background-color: var(--overlay-light);
+}
+
+.document-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.document-name {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.document-size {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.documents-dropdown .delete-btn-small {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  background-color: transparent !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  opacity: 0.8 !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  box-shadow: none !important;
+}
+
+.documents-dropdown .delete-btn-small svg {
+  width: 12px !important;
+  height: 12px !important;
+  color: var(--text-secondary) !important;
+  stroke: var(--text-secondary) !important;
+  stroke-width: 2.5 !important;
+  fill: none !important;
+}
+
+.documents-dropdown .delete-btn-small:hover {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  opacity: 1 !important;
+  transform: scale(1.1) !important;
+}
+
+.documents-dropdown .delete-btn-small:hover svg {
+  color: #ef4444 !important;
+  stroke: #ef4444 !important;
+}
+
+.no-documents {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.no-documents p {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.no-documents small {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
 }
 
 /* Loading spinner animation */

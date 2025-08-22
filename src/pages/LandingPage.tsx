@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ProfileCard from "../components/ProfileCard";
 import { loadProfiles, saveProfiles } from "../store/profileStore";
 import { Profile } from "../types/types";

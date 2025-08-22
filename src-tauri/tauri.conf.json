@@ -30,7 +30,8 @@
     "category": "Utility",
     "iOS": {
       "bundleVersion": "0.1.0",
-      "developmentTeam": "Z49TD63LCM"
+      "developmentTeam": "Z49TD63LCM",
+      "frameworks": []
     },
     "macOS": {
       "entitlements": "./Entitlements.plist",

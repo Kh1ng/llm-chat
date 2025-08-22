@@ -164,3 +164,14 @@
     color: inherit;
   }
 }
+
+/* Documents button styling */
+.documents-button {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.documents-button svg {
+  flex-shrink: 0;
+}

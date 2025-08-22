@@ -38,8 +38,8 @@ vi.mock("@tauri-apps/plugin-store", () => {
 });
 
 const mockProfiles: Profile[] = [
-  { name: "local", address: "localhost:11434", models: ["llama3", "codellama"] },
-  { name: "remote", address: "192.168.1.5", models: ["wizardlm"] },
+  { name: "local", address: "localhost", port: 11434, models: ["llama3", "codellama"] },
+  { name: "remote", address: "192.168.1.5", port: 11434, models: ["wizardlm"] },
 ];
 
 beforeEach(async () => {
@@ -66,8 +66,8 @@ describe("profileStore", () => {
   });
 
   it("overwrites old profiles with same name", async () => {
-    const first = [{ name: "test", address: "localhost", models: ["v1"] }];
-    const updated = [{ name: "test", address: "localhost", models: ["v2"] }];
+    const first = [{ name: "test", address: "localhost", port: 11434, models: ["v1"] }];
+    const updated = [{ name: "test", address: "localhost", port: 11434, models: ["v2"] }];
     await saveProfiles(first);
     await saveProfiles(updated);
     const loaded = await loadProfiles();
@@ -93,6 +93,7 @@ it("saves a new profile with saveOrUpdateProfile", async () => {
   const newProfile: Profile = {
     name: "test1",
     address: "127.0.0.1",
+    port: 11434,
     models: ["mistral"]
   };
   await saveOrUpdateProfile(newProfile);
@@ -104,11 +105,13 @@ it("overwrites a profile with saveOrUpdateProfile", async () => {
   const original: Profile = {
     name: "duplicate",
     address: "127.0.0.1",
+    port: 11434,
     models: ["v1"]
   };
   const updated: Profile = {
     name: "duplicate",
     address: "127.0.0.1",
+    port: 11434,
     models: ["v2"]
   };
   await saveOrUpdateProfile(original);

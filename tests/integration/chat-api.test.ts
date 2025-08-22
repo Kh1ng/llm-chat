@@ -16,9 +16,10 @@ beforeAll(() => {
 
 describe("ChatPage", () => {
   const mockProfile: Profile = {
-    name: "local",
-    address: "localhost:11434",
-    models: ["mistral"],
+    name: "test-profile",
+    address: "localhost",
+    port: 11434,
+    models: ["test-model"],
   };
 
   let model = "mistral";

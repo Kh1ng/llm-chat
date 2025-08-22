@@ -3,6 +3,7 @@
 @import url("./styles/forms.css");
 @import url("./styles/components.css");
 @import url("./styles/chat.css");
+@import url("./styles/documents.css");
 
 /* Full Height App Structure */
 body, html, #root {
@@ -67,6 +68,9 @@ body, html, #root {
   --overlay-light: rgba(255, 255, 255, 0.1);
   --overlay-medium: rgba(255, 255, 255, 0.15);
   --overlay-dark: rgba(13, 17, 23, 0.95);
+  
+  /* State Colors */
+  --error-color: #e25d5d;
   
   /* Base Typography Settings */
   font-family: var(--font-family);

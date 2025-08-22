@@ -68,6 +68,7 @@ useEffect(() => {
 // eslint-disable-next-line react-hooks/exhaustive-deps  
 }, [isActive, waking]);
 
+
   return (
     <details className="profile-card" open={isActive}>
       <summary

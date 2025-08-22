@@ -17,10 +17,7 @@ export type Profile = {
 };
 
 export type ChatPageProps = {
-  profile: {
-    name: string;
-    address: string;
-  };
+  profile: Profile;
   model: string;
 };
 

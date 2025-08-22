@@ -21,9 +21,10 @@ vi.mock("sonner", () => ({
 
 describe("ProfileCard Component", () => {
   const mockProfile: Profile = {
-    name: "Test Profile",
-    address: "localhost:11434",
-    models: ["llama2", "codellama"],
+    name: "test-profile",
+    address: "localhost",
+    port: 11434,
+    models: ["model1", "model2"],
   };
 
   const defaultProps = {

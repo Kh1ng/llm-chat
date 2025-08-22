@@ -57,7 +57,7 @@ describe("authHelpers", () => {
 
   describe("buildAuthHeader", () => {
     it("returns empty object for profile without auth", () => {
-      const profile: Profile = { name: "test", address: "localhost", models: [] };
+      const profile: Profile = { name: "test", address: "localhost", port: 11434, models: [] };
       expect(buildAuthHeader(profile)).toEqual({});
     });
 
@@ -65,6 +65,7 @@ describe("authHelpers", () => {
       const profile: Profile = {
         name: "test",
         address: "localhost",
+        port: 11434,
         models: [],
         auth: { type: "bearer", value: "" },
       };
@@ -75,6 +76,7 @@ describe("authHelpers", () => {
       const profile: Profile = {
         name: "test",
         address: "localhost",
+        port: 11434,
         models: [],
         auth: { type: "bearer", value: "token123" },
       };
@@ -87,6 +89,7 @@ describe("authHelpers", () => {
       const profile: Profile = {
         name: "test",
         address: "localhost",
+        port: 11434,
         models: [],
         auth: { type: "basic", value: "user:pass" },
       };
@@ -100,8 +103,9 @@ describe("authHelpers", () => {
       const profile: Profile = {
         name: "test",
         address: "localhost",
+        port: 11434,
         models: [],
-        auth: { type: "custom", value: "secret-key", headerName: "X-API-Key" },
+        auth: { type: "custom", value: "custom-value", headerName: "X-Api-Key" },
       };
       expect(buildAuthHeader(profile)).toEqual({
         "X-API-Key": "secret-key",
