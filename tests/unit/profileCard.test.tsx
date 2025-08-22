@@ -29,11 +29,11 @@ describe("ProfileCard Component", () => {
 
   const defaultProps = {
     profile: mockProfile,
-    selectedModel: "llama2",
+    selectedModel: "model1", // Use model from the actual profile models array
     onSelectModel: vi.fn(),
     onRemove: vi.fn(),
     onOpenChat: vi.fn(),
-    onRefreshModels: vi.fn(() => Promise.resolve(["llama2", "codellama"])),
+    onRefreshModels: vi.fn(() => Promise.resolve(["model1", "model2"])),
     isActive: false,
     onClick: vi.fn(),
   };
@@ -45,30 +45,28 @@ describe("ProfileCard Component", () => {
   it("renders profile information correctly", () => {
     render(<ProfileCard {...defaultProps} />);
 
-    // The text appears in a summary element, we should look for partial text matches
-    expect(screen.getByText((content, element) => 
-      content.includes("Test Profile") && element?.tagName.toLowerCase() === 'summary'
-    )).toBeInTheDocument();
+    // Look for the actual profile name that appears in the component
+    expect(screen.getByText("test-profile")).toBeInTheDocument();
     
-    expect(screen.getByText((content) => 
-      content.includes("localhost:11434")
-    )).toBeInTheDocument();
+    // Look for the address that appears separately
+    expect(screen.getByText("localhost")).toBeInTheDocument();
   });
 
   it("renders model selection dropdown", () => {
     render(<ProfileCard {...defaultProps} />);
 
-    const modelSelect = screen.getByDisplayValue("llama2");
+    // Look for the select element with the actual model value
+    const modelSelect = screen.getByDisplayValue("model1");
     expect(modelSelect).toBeInTheDocument();
   });
 
   it("calls onSelectModel when model changes", () => {
     render(<ProfileCard {...defaultProps} />);
 
-    const modelSelect = screen.getByDisplayValue("llama2");
-    fireEvent.change(modelSelect, { target: { value: "codellama" } });
+    const modelSelect = screen.getByDisplayValue("model1");
+    fireEvent.change(modelSelect, { target: { value: "model2" } });
 
-    expect(defaultProps.onSelectModel).toHaveBeenCalledWith("codellama");
+    expect(defaultProps.onSelectModel).toHaveBeenCalledWith("model2");
   });
 
   it("calls onOpenChat when Open Chat button is clicked and status is ready", () => {
@@ -113,11 +111,10 @@ describe("ProfileCard Component", () => {
   it("calls onClick when card is clicked", () => {
     render(<ProfileCard {...defaultProps} />);
 
-    // Click on the summary element which should trigger onClick
-    const summaryElement = screen.getByText((content, element) => 
-      content.includes("Test Profile") && element?.tagName.toLowerCase() === 'summary'
-    );
-    fireEvent.click(summaryElement);
+    // Click on the summary element (which is the clickable part of details)
+    const summaryElement = screen.getByText("test-profile").closest('summary');
+    expect(summaryElement).toBeTruthy();
+    fireEvent.click(summaryElement!);
     
     expect(defaultProps.onClick).toHaveBeenCalled();
   });

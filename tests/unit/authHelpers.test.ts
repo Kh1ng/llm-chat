@@ -108,7 +108,7 @@ describe("authHelpers", () => {
         auth: { type: "custom", value: "custom-value", headerName: "X-Api-Key" },
       };
       expect(buildAuthHeader(profile)).toEqual({
-        "X-API-Key": "secret-key",
+        "X-Api-Key": "custom-value",
       });
     });
   });

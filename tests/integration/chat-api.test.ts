@@ -27,45 +27,61 @@ describe("ChatPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock get_documents to return empty array by default
+    mockedInvoke.mockImplementation((command) => {
+      if (command === "get_documents") {
+        return Promise.resolve([]);
+      }
+      return Promise.resolve("Mock response");
+    });
   });
 
   it("renders the ChatPage with profile and model info", () => {
     render(React.createElement(ChatPage, { profile: mockProfile, model }));
-    expect(screen.getByText(`Chat with ${model}`)).toBeInTheDocument();
-    expect(
-      screen.getByText(`Using profile: ${mockProfile.name} (${mockProfile.address})`)
-    ).toBeInTheDocument();
+    
+    // Check for the welcome message which includes the model name
+    expect(screen.getByText("Welcome to LLM Chat")).toBeInTheDocument();
+    expect(screen.getByText((content) => content.includes(`Start a conversation with ${model}`))).toBeInTheDocument();
   });
 
   it("submits user input and shows bot reply", async () => {
     const fakeReply = "Hello, world!";
-    mockedInvoke.mockResolvedValue(fakeReply);
+    mockedInvoke.mockImplementation((command) => {
+      if (command === "get_documents") {
+        return Promise.resolve([]);
+      }
+      return Promise.resolve(fakeReply);
+    });
 
     render(React.createElement(ChatPage, { profile: mockProfile, model }));
 
-    const input = screen.getByPlaceholderText("Type your message") as HTMLTextAreaElement;
+    const input = screen.getByPlaceholderText("Message...") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "Hi" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter", charCode: 13 });
 
     await waitFor(() => {
-      expect(screen.getByText("You:")).toBeInTheDocument();
+      // Look for the actual message text in the new UI format
       expect(screen.getByText("Hi")).toBeInTheDocument();
-      expect(screen.getByText(`${model}:`)).toBeInTheDocument();
       expect(screen.getByText(fakeReply)).toBeInTheDocument();
     });
   });
 
   it("handles LLM request failure gracefully", async () => {
-    mockedInvoke.mockRejectedValue(new Error("fail"));
+    mockedInvoke.mockImplementation((command) => {
+      if (command === "get_documents") {
+        return Promise.resolve([]);
+      }
+      return Promise.reject(new Error("fail"));
+    });
 
     render(React.createElement(ChatPage, { profile: mockProfile, model }));
 
-    const input = screen.getByPlaceholderText("Type your message") as HTMLTextAreaElement;
+    const input = screen.getByPlaceholderText("Message...") as HTMLTextAreaElement;
     fireEvent.change(input, { target: { value: "Hi" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter", charCode: 13 });
 
     await waitFor(() => {
-      expect(screen.getByText("⚠️ Failed to get response.")).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes("⚠️ Failed to get response"))).toBeInTheDocument();
     });
   });
 

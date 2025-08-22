@@ -36,14 +36,14 @@ describe("Landing Profile Flow", () => {
     (
       profileStore.loadProfiles as unknown as ReturnType<typeof vi.fn>
     ).mockResolvedValue([
-      { name: "test", address: "localhost", models: ["mistral"] },
+      { name: "test", address: "localhost", port: 11434, models: ["mistral"] },
     ]);
     renderWithProviders(<LandingPage onOpenChat={() => {}} />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText((content) => content.includes("test") && content.includes("localhost"))
-      ).toBeInTheDocument();
+      // Profile name and address appear in separate elements
+      expect(screen.getByText("test")).toBeInTheDocument();
+      expect(screen.getByText("localhost")).toBeInTheDocument();
     });
   });
 
