@@ -1,18 +1,12 @@
-name: Android Release Build
+name: 🤖 Android Build
 
 on:
-  # Trigger on release creation
   release:
     types: [created]
-  # Allow manual triggering
   workflow_dispatch:
-  # Trigger on pushes to main branch (optional - remove if you don't want automatic builds)
   push:
-    branches: [main, master]
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - 'LICENSE'
+    tags:
+      - 'v*'
 
 env:
   CARGO_TERM_COLOR: always
@@ -70,9 +64,9 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             src-tauri/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: android-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-cargo-
+            android-cargo-
 
       - name: Set up environment variables
         run: |
@@ -80,7 +74,12 @@ jobs:
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
           echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
 
-      - name: Initialize Tauri Android project (if not already done)
+      - name: Create debug keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Initialize Tauri Android project
         run: |
           if [ ! -d "src-tauri/gen/android" ]; then
             cargo tauri android init
@@ -88,32 +87,56 @@ jobs:
 
       - name: Build Android APK
         run: |
-          cargo tauri android build --apk
+          cargo tauri android build --apk --no-default-features
         env:
           ANDROID_HOME: ${{ env.ANDROID_HOME }}
           NDK_HOME: ${{ env.NDK_HOME }}
 
-      - name: Find APK files
+      - name: Find and prepare APK files
         id: find-apks
         run: |
-          APK_PATH=$(find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" -type f | head -1)
-          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
-          if [ -f "$APK_PATH" ]; then
-            echo "APK found: $APK_PATH"
-            ls -la "$APK_PATH"
+          # Find all APK files
+          UNIVERSAL_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*universal*.apk" -type f | head -1)
+          ARM64_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*arm64*.apk" -type f | head -1)
+          
+          # If we found a universal APK, use that as primary
+          if [ -f "$UNIVERSAL_APK" ]; then
+            PRIMARY_APK="$UNIVERSAL_APK"
+            cp "$UNIVERSAL_APK" "llm-chat-android-universal.apk"
+            echo "apk_path=llm-chat-android-universal.apk" >> $GITHUB_OUTPUT
+            echo "apk_name=llm-chat-android-universal.apk" >> $GITHUB_OUTPUT
+          elif [ -f "$ARM64_APK" ]; then
+            PRIMARY_APK="$ARM64_APK" 
+            cp "$ARM64_APK" "llm-chat-android-arm64.apk"
+            echo "apk_path=llm-chat-android-arm64.apk" >> $GITHUB_OUTPUT
+            echo "apk_name=llm-chat-android-arm64.apk" >> $GITHUB_OUTPUT
           else
-            echo "No APK found!"
+            # Find any APK as fallback
+            PRIMARY_APK=$(find src-tauri/gen/android -name "*.apk" -type f | head -1)
+            if [ -f "$PRIMARY_APK" ]; then
+              cp "$PRIMARY_APK" "llm-chat-android.apk"
+              echo "apk_path=llm-chat-android.apk" >> $GITHUB_OUTPUT
+              echo "apk_name=llm-chat-android.apk" >> $GITHUB_OUTPUT
+            fi
+          fi
+          
+          if [ -f "$PRIMARY_APK" ]; then
+            echo "Android APK built successfully: $PRIMARY_APK"
+            ls -la "$PRIMARY_APK"
+            ls -la llm-chat-android*.apk 2>/dev/null || true
+          else
+            echo "Android build failed - no APK found!"
             find src-tauri/gen/android -name "*.apk" -type f || echo "No APK files found anywhere"
+            exit 1
           fi
 
-      - name: Upload APK artifact
+      - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: llm-chat-android-apk
           path: ${{ steps.find-apks.outputs.apk_path }}
           retention-days: 30
 
-      # Optional: Upload to release if this was triggered by a release
       - name: Upload APK to Release
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
@@ -122,14 +145,14 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ${{ steps.find-apks.outputs.apk_path }}
-          asset_name: llm-chat-android.apk
+          asset_name: ${{ steps.find-apks.outputs.apk_name }}
           asset_content_type: application/vnd.android.package-archive
 
-      - name: Build Info
+      - name: Build Summary
         run: |
-          echo "🎉 Android build completed successfully!"
-          echo "📱 APK Location: ${{ steps.find-apks.outputs.apk_path }}"
-          echo "💾 APK uploaded as artifact: llm-chat-android-apk"
+          echo "✅ Android build completed successfully!"
+          echo "📦 APK: ${{ steps.find-apks.outputs.apk_path }}"
+          echo "🚀 Uploaded as artifact: llm-chat-android-apk"
           if [ "${{ github.event_name }}" == "release" ]; then
-            echo "🚀 APK also uploaded to release assets"
+            echo "📱 Also uploaded to release assets"
           fi

@@ -74,7 +74,7 @@ export default function LandingPage({ onOpenChat }: LandingPageProps) {
               )
             }
             onRefreshModels={() => refreshModels(profile)}
-            onEdit={(profile) => navigate("/settings", { state: { profile } })}
+            onEdit={() => navigate("/settings", { state: { profile } })}
           />
         </div>
       ))}

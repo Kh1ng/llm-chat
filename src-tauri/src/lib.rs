@@ -10,6 +10,7 @@ use uuid::Uuid;
 use std::sync::Mutex;
 use std::fs;
 use tauri::State;
+#[cfg(feature = "desktop-features")]
 use text_splitter::TextSplitter;
 
 #[derive(serde::Deserialize, Clone)]
@@ -252,8 +253,15 @@ fn extract_text_from_file(file_path: &str, file_type: &str) -> Result<String, St
                 .map_err(|e| format!("Failed to read text file: {}", e))
         }
         "pdf" => {
-            pdf_extract::extract_text(file_path)
-                .map_err(|e| format!("Failed to extract PDF text: {}", e))
+            #[cfg(feature = "desktop-features")]
+            {
+                pdf_extract::extract_text(file_path)
+                    .map_err(|e| format!("Failed to extract PDF text: {}", e))
+            }
+            #[cfg(not(feature = "desktop-features"))]
+            {
+                Err("PDF extraction not available on this platform".to_string())
+            }
         }
         _ => Err(format!("Unsupported file type: {}", file_type))
     }
@@ -267,62 +275,69 @@ fn extract_text_from_bytes(file_content: &[u8], file_type: &str) -> Result<Strin
                 .map_err(|e| format!("Failed to read text file: {}", e))
         }
         "pdf" => {
-            // For PDF, we need to write to a temp file and use pdf_extract
-            // This is a temporary workaround until we find a pure bytes-based PDF parser
-            use std::io::Write;
-            
-            // Choose appropriate temp directory based on platform
-            let temp_dir = if cfg!(target_os = "ios") {
-                // On iOS, use the app's temp directory
-                match std::env::var("TMPDIR").or_else(|_| std::env::var("HOME")) {
-                    Ok(dir) => std::path::PathBuf::from(dir).join("tmp"),
-                    Err(_) => std::env::temp_dir(),
-                }
-            } else {
-                std::env::temp_dir()
-            };
-            
-            // Ensure temp directory exists
-            if let Err(e) = fs::create_dir_all(&temp_dir) {
-                eprintln!("Warning: Failed to create temp directory: {}", e);
-            }
-            
-            let temp_file = temp_dir.join(format!("temp_pdf_{}.pdf", uuid::Uuid::new_v4()));
-            
-            // Write bytes to temp file
+            #[cfg(feature = "desktop-features")]
             {
-                let mut file = fs::File::create(&temp_file)
-                    .map_err(|e| format!("Failed to create temp file: {}", e))?;
-                file.write_all(file_content)
-                    .map_err(|e| format!("Failed to write temp file: {}", e))?;
-            }
-            
-            // Extract text from temp file with better error handling
-            let extraction_result = pdf_extract::extract_text(&temp_file);
-            
-            // Clean up temp file
-            if let Err(e) = fs::remove_file(&temp_file) {
-                eprintln!("Warning: Failed to clean up temp file: {}", e);
-            }
-            
-            match extraction_result {
-                Ok(text) => {
-                    let trimmed_text = text.trim();
-                    println!("PDF extraction successful: {} characters", trimmed_text.len());
-                    
-                    if trimmed_text.is_empty() {
-                        Ok("[PDF appears to be empty or contains no extractable text - this may be a scanned document]".to_string())
-                    } else if trimmed_text.len() < 50 {
-                        println!("Warning: PDF extraction yielded very little text: '{}'", trimmed_text);
-                        Ok(format!("[PDF extraction yielded minimal text]: {}", trimmed_text))
-                    } else {
-                        Ok(trimmed_text.to_string())
+                // For PDF, we need to write to a temp file and use pdf_extract
+                // This is a temporary workaround until we find a pure bytes-based PDF parser
+                use std::io::Write;
+                
+                // Choose appropriate temp directory based on platform
+                let temp_dir = if cfg!(target_os = "ios") {
+                    // On iOS, use the app's temp directory
+                    match std::env::var("TMPDIR").or_else(|_| std::env::var("HOME")) {
+                        Ok(dir) => std::path::PathBuf::from(dir).join("tmp"),
+                        Err(_) => std::env::temp_dir(),
+                    }
+                } else {
+                    std::env::temp_dir()
+                };
+                
+                // Ensure temp directory exists
+                if let Err(e) = fs::create_dir_all(&temp_dir) {
+                    eprintln!("Warning: Failed to create temp directory: {}", e);
+                }
+                
+                let temp_file = temp_dir.join(format!("temp_pdf_{}.pdf", uuid::Uuid::new_v4()));
+                
+                // Write bytes to temp file
+                {
+                    let mut file = fs::File::create(&temp_file)
+                        .map_err(|e| format!("Failed to create temp file: {}", e))?;
+                    file.write_all(file_content)
+                        .map_err(|e| format!("Failed to write temp file: {}", e))?;
+                }
+                
+                // Extract text from temp file with better error handling
+                let extraction_result = pdf_extract::extract_text(&temp_file);
+                
+                // Clean up temp file
+                if let Err(e) = fs::remove_file(&temp_file) {
+                    eprintln!("Warning: Failed to clean up temp file: {}", e);
+                }
+                
+                match extraction_result {
+                    Ok(text) => {
+                        let trimmed_text = text.trim();
+                        println!("PDF extraction successful: {} characters", trimmed_text.len());
+                        
+                        if trimmed_text.is_empty() {
+                            Ok("[PDF appears to be empty or contains no extractable text - this may be a scanned document]".to_string())
+                        } else if trimmed_text.len() < 50 {
+                            println!("Warning: PDF extraction yielded very little text: '{}'", trimmed_text);
+                            Ok(format!("[PDF extraction yielded minimal text]: {}", trimmed_text))
+                        } else {
+                            Ok(trimmed_text.to_string())
+                        }
+                    }
+                    Err(e) => {
+                        println!("PDF extraction failed with error: {}", e);
+                        Ok(format!("[PDF content could not be extracted - {}. This may be a complex PDF, scanned document, or contain primarily images]", e))
                     }
                 }
-                Err(e) => {
-                    println!("PDF extraction failed with error: {}", e);
-                    Ok(format!("[PDF content could not be extracted - {}. This may be a complex PDF, scanned document, or contain primarily images]", e))
-                }
+            }
+            #[cfg(not(feature = "desktop-features"))]
+            {
+                Err("PDF extraction not available on this platform".to_string())
             }
         }
         _ => Err(format!("Unsupported file type: {}", file_type))
@@ -331,9 +346,27 @@ fn extract_text_from_bytes(file_content: &[u8], file_type: &str) -> Result<Strin
 
 // Chunk text into smaller pieces for embeddings
 fn chunk_text(text: &str, chunk_size: usize, _overlap: usize) -> Vec<String> {
-    let splitter = TextSplitter::new(chunk_size);
-    
-    splitter.chunks(text).map(|s| s.to_string()).collect()
+    #[cfg(feature = "desktop-features")]
+    {
+        let splitter = TextSplitter::new(chunk_size);
+        splitter.chunks(text).map(|s| s.to_string()).collect()
+    }
+    #[cfg(not(feature = "desktop-features"))]
+    {
+        // Fallback simple text chunking for mobile platforms
+        let chars: Vec<char> = text.chars().collect();
+        let mut chunks = Vec::new();
+        let mut start = 0;
+        
+        while start < chars.len() {
+            let end = std::cmp::min(start + chunk_size, chars.len());
+            let chunk: String = chars[start..end].iter().collect();
+            chunks.push(chunk);
+            start = end;
+        }
+        
+        chunks
+    }
 }
 
 // Generate embeddings using the LLM server's embedding endpoint (with fallbacks)

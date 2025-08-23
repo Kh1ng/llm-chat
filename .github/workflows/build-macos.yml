@@ -1,0 +1,122 @@
+name: 🍎 macOS Build
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-macos:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+            name: intel
+          - target: aarch64-apple-darwin
+            name: apple-silicon
+    
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{ matrix.target }}
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0" --locked
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: macos-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            macos-${{ matrix.target }}-cargo-
+
+      - name: Build macOS Application
+        run: cargo tauri build --target ${{ matrix.target }}
+
+      - name: Find built files
+        id: find-files
+        run: |
+          # Find DMG file first (preferred)
+          DMG_FILE=$(find src-tauri/target/${{ matrix.target }}/release/bundle/dmg -name "*.dmg" -type f | head -1)
+          # Find .app bundle as fallback
+          APP_BUNDLE=$(find src-tauri/target/${{ matrix.target }}/release/bundle/macos -name "*.app" -type d | head -1)
+          
+          if [ -d "$DMG_FILE" ]; then
+            echo "dmg_path=$DMG_FILE" >> $GITHUB_OUTPUT
+            echo "macOS DMG built: $DMG_FILE"
+            ls -la "$DMG_FILE"
+          fi
+          
+          if [ -d "$APP_BUNDLE" ]; then
+            echo "app_path=$APP_BUNDLE" >> $GITHUB_OUTPUT
+            echo "macOS App built: $APP_BUNDLE"
+            ls -la "$APP_BUNDLE"
+          fi
+          
+          if [ ! -f "$DMG_FILE" ] && [ ! -d "$APP_BUNDLE" ]; then
+            echo "macOS build failed - no DMG or app bundle found"
+            exit 1
+          fi
+
+      - name: Upload macOS DMG Artifact
+        if: steps.find-files.outputs.dmg_path
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-chat-macos-${{ matrix.name }}-dmg
+          path: ${{ steps.find-files.outputs.dmg_path }}
+          retention-days: 30
+
+      - name: Upload macOS App Artifact
+        if: steps.find-files.outputs.app_path
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-chat-macos-${{ matrix.name }}-app
+          path: ${{ steps.find-files.outputs.app_path }}
+          retention-days: 30
+
+      - name: Upload DMG to Release
+        if: github.event_name == 'release' && steps.find-files.outputs.dmg_path
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.find-files.outputs.dmg_path }}
+          asset_name: llm-chat-macos-${{ matrix.name }}.dmg
+          asset_content_type: application/octet-stream
+
+      - name: Build Summary
+        run: |
+          echo "✅ macOS (${{ matrix.name }}) build completed successfully!"
+          if [ -n "${{ steps.find-files.outputs.dmg_path }}" ]; then
+            echo "📦 DMG: ${{ steps.find-files.outputs.dmg_path }}"
+          fi
+          if [ -n "${{ steps.find-files.outputs.app_path }}" ]; then
+            echo "📦 App Bundle: ${{ steps.find-files.outputs.app_path }}"
+          fi

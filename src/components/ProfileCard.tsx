@@ -6,7 +6,7 @@ import { ProfileCardProps } from "../types/types";
 import "../styles/buttons.css";
 import "../styles/cards.css";
 
-export default function ProfileCard(props: ProfileCardProps & { onEdit?: (profile: any) => void }) {
+export default function ProfileCard(props: ProfileCardProps) {
   const {
     profile,
     selectedModel,
@@ -130,7 +130,7 @@ useEffect(() => {
             <button onClick={onRemove} className="profile-button profile-button-small">
               Remove
             </button>
-            <button onClick={() => props.onEdit && props.onEdit(profile)} className="profile-button profile-button-small">
+            <button onClick={() => props.onEdit && props.onEdit()} className="profile-button profile-button-small">
               Edit
             </button>
             {profile.macAddress && (

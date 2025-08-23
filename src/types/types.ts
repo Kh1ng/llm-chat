@@ -36,6 +36,6 @@ export type ProfileCardProps = {
   onClick: () => void;
   isActive: boolean;
   onRefreshModels: () => void;
-  onEdit?: (profile: Profile) => void;
+  onEdit?: () => void;
 };
 
