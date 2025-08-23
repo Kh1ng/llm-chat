@@ -1,0 +1,266 @@
+name: Release Build
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-desktop:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact-name: llm-chat-linux
+            file-extension: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact-name: llm-chat-windows
+            file-extension: .exe
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact-name: llm-chat-macos-intel
+            file-extension: ""
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact-name: llm-chat-macos-apple
+            file-extension: ""
+
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0" --locked
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.target }}-cargo-
+
+      - name: Build Desktop App
+        run: cargo tauri build --target ${{ matrix.target }}
+
+      - name: Find built executable
+        id: find-executable
+        shell: bash
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            EXECUTABLE=$(find src-tauri/target/${{ matrix.target }}/release -name "*.exe" -type f | head -1)
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            BUNDLE=$(find src-tauri/target/${{ matrix.target }}/release/bundle -name "*.app" -type d | head -1)
+            if [ -n "$BUNDLE" ]; then
+              EXECUTABLE="$BUNDLE"
+            else
+              EXECUTABLE=$(find src-tauri/target/${{ matrix.target }}/release -name "llm-chat" -type f | head -1)
+            fi
+          else
+            EXECUTABLE=$(find src-tauri/target/${{ matrix.target }}/release -name "llm-chat" -type f | head -1)
+          fi
+          echo "executable_path=$EXECUTABLE" >> $GITHUB_OUTPUT
+
+      - name: Upload Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: ${{ steps.find-executable.outputs.executable_path }}
+          retention-days: 30
+
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager "ndk;25.2.9519653"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install Rust Android targets
+        run: |
+          rustup target add aarch64-linux-android
+          rustup target add armv7-linux-androideabi
+          rustup target add i686-linux-android
+          rustup target add x86_64-linux-android
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0" --locked
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: android-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            android-cargo-
+
+      - name: Set up environment variables
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653" >> $GITHUB_ENV
+
+      - name: Create debug keystore (for unsigned builds)
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      # Uncomment and configure the following if you want to sign your APKs with a release keystore
+      # - name: Setup release keystore
+      #   if: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      #   run: |
+      #     echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
+      #     echo "ANDROID_KEYSTORE_PATH=$(pwd)/release.keystore" >> $GITHUB_ENV
+      #     echo "ANDROID_KEYSTORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+      #     echo "ANDROID_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> $GITHUB_ENV
+      #     echo "ANDROID_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Initialize Tauri Android project (if not already done)
+        run: |
+          if [ ! -d "src-tauri/gen/android" ]; then
+            cargo tauri android init
+          fi
+
+      - name: Build Android APK (Release)
+        run: |
+          cargo tauri android build --apk
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          NDK_HOME: ${{ env.NDK_HOME }}
+
+      - name: Find and rename APK files
+        id: find-apks
+        run: |
+          # Find all APK files
+          UNIVERSAL_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*universal*.apk" -type f | head -1)
+          ARM64_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*arm64*.apk" -type f | head -1)
+          
+          # If we found a universal APK, use that as primary
+          if [ -f "$UNIVERSAL_APK" ]; then
+            PRIMARY_APK="$UNIVERSAL_APK"
+            cp "$UNIVERSAL_APK" "llm-chat-android-universal.apk"
+            echo "universal_apk=llm-chat-android-universal.apk" >> $GITHUB_OUTPUT
+          elif [ -f "$ARM64_APK" ]; then
+            PRIMARY_APK="$ARM64_APK" 
+            cp "$ARM64_APK" "llm-chat-android-arm64.apk"
+            echo "universal_apk=llm-chat-android-arm64.apk" >> $GITHUB_OUTPUT
+          else
+            # Find any APK as fallback
+            PRIMARY_APK=$(find src-tauri/gen/android -name "*.apk" -type f | head -1)
+            if [ -f "$PRIMARY_APK" ]; then
+              cp "$PRIMARY_APK" "llm-chat-android.apk"
+              echo "universal_apk=llm-chat-android.apk" >> $GITHUB_OUTPUT
+            fi
+          fi
+          
+          if [ -f "$PRIMARY_APK" ]; then
+            echo "APK found: $PRIMARY_APK"
+            ls -la "$PRIMARY_APK"
+            ls -la llm-chat-android*.apk 2>/dev/null || true
+          else
+            echo "No APK found!"
+            find src-tauri/gen/android -name "*.apk" -type f || echo "No APK files found anywhere"
+            exit 1
+          fi
+
+      - name: Upload Android APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-chat-android-apk
+          path: ${{ steps.find-apks.outputs.universal_apk }}
+          retention-days: 30
+
+      # Upload to release if this was triggered by a release
+      - name: Upload APK to Release
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.find-apks.outputs.universal_apk }}
+          asset_name: llm-chat-android.apk
+          asset_content_type: application/vnd.android.package-archive
+
+  # Create a final summary
+  build-summary:
+    needs: [build-desktop, build-android]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Build Summary
+        run: |
+          echo "## 🎉 Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Desktop Builds:" >> $GITHUB_STEP_SUMMARY
+          echo "- Linux (x86_64)" >> $GITHUB_STEP_SUMMARY  
+          echo "- Windows (x86_64)" >> $GITHUB_STEP_SUMMARY
+          echo "- macOS Intel (x86_64)" >> $GITHUB_STEP_SUMMARY
+          echo "- macOS Apple Silicon (aarch64)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Mobile Builds:" >> $GITHUB_STEP_SUMMARY
+          echo "- Android APK (Universal)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All artifacts are available in the Actions artifacts section!" >> $GITHUB_STEP_SUMMARY
