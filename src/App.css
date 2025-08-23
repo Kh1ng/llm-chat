@@ -15,6 +15,7 @@ body, html, #root {
 
 .app-container {
   height: 100vh;
+  height: 100dvh; /* Use dynamic viewport height for better mobile support */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -25,6 +26,28 @@ body, html, #root {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* Mobile viewport keyboard handling */
+@media (max-width: 768px) {
+  .app-container {
+    /* Use smaller viewport units on mobile to handle keyboard */
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 /* ========================================================== 
@@ -471,9 +494,6 @@ select:focus {
   margin-top: 0.5rem;
 }
 
-.profile-button.open-chat {
-  margin-left: 0.5rem;
-}
 
 .profile-button:disabled {
   opacity: 0.5;

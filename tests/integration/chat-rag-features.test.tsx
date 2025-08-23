@@ -1,4 +1,3 @@
-import * as React from "react";
 import { describe, it, beforeEach, beforeAll, vi, expect } from "vitest";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -60,7 +59,7 @@ describe("ChatPage RAG Features", () => {
     vi.clearAllMocks();
     
     // Default mock implementation
-    mockedInvoke.mockImplementation((command, args) => {
+    mockedInvoke.mockImplementation((command) => {
       switch (command) {
         case "get_documents":
           return Promise.resolve([]);
@@ -158,7 +157,7 @@ describe("ChatPage RAG Features", () => {
     });
 
     it("handles file upload successfully", async () => {
-      mockedInvoke.mockImplementation((command, args) => {
+      mockedInvoke.mockImplementation((command) => {
         if (command === "get_documents") {
           return Promise.resolve([]);
         }

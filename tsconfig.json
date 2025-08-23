@@ -26,6 +26,7 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["node", "@testing-library/jest-dom/matchers", "vitest"]
   },
-  "include": ["src", "tests"],
+  "include": ["src"],
+  "exclude": ["tests", "**/*.test.ts", "**/*.test.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -48,6 +48,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .profile-button:hover:not(:disabled) {
@@ -69,6 +71,8 @@
   font-weight: 600;
   min-height: 48px;
   width: 100%;
+  margin: 0; /* Remove any margins */
+  box-sizing: border-box;
 }
 
 .profile-button.open-chat:hover:not(:disabled) {

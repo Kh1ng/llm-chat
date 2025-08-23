@@ -38,6 +38,9 @@
       "files": {
         "embedded.provisionprofile": "./embedded.provisionprofile"
       }
+    },
+    "android": {
+      "minSdkVersion": 24
     }
   },
   "plugins": {}

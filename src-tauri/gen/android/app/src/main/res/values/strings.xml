@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">llm-chat</string>
+    <string name="main_activity_title">llm-chat</string>
+</resources>

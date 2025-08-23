@@ -66,10 +66,17 @@ struct DocumentChunk {
 // Database connection type
 type DbConnection = Mutex<Connection>;
 
-// Initialize database with iOS-compatible path
+// Initialize database with mobile-compatible path
 fn init_database() -> SqliteResult<Connection> {
     // Use app data directory for database on mobile platforms
-    let db_path = if cfg!(target_os = "ios") {
+    let db_path = if cfg!(target_os = "android") {
+        // On Android, try to use the app's internal storage directory
+        // If not available, use in-memory database as fallback
+        match std::env::var("ANDROID_DATA") {
+            Ok(data_dir) => format!("{}/data/tech.coltonspurgin.llmchat/llm_chat.db", data_dir),
+            Err(_) => ":memory:".to_string(), // Use in-memory DB as fallback
+        }
+    } else if cfg!(target_os = "ios") {
         // On iOS, use the app's documents directory
         match std::env::var("HOME") {
             Ok(home) => format!("{}/Documents/llm_chat.db", home),
