@@ -1,10 +1,10 @@
 ![GitHub license](https://img.shields.io/badge/license-AGPL-green.svg)
 [![Tests](https://github.com/Kh1ng/llm-chat/actions/workflows/test.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/test.yml)
-[![🐧 Linux](https://github.com/Kh1ng/llm-chat/actions/workflows/build-linux.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-linux.yml)
-[![🪟 Windows](https://github.com/Kh1ng/llm-chat/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-windows.yml)
-[![🍎 macOS](https://github.com/Kh1ng/llm-chat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-macos.yml)
-[![📱 iOS](https://github.com/Kh1ng/llm-chat/actions/workflows/build-ios.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-ios.yml)
-[![🤖 Android](https://github.com/Kh1ng/llm-chat/actions/workflows/build-android.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-android.yml)
+[![Linux](https://github.com/Kh1ng/llm-chat/actions/workflows/build-linux.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-linux.yml)
+[![Windows](https://github.com/Kh1ng/llm-chat/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-windows.yml)
+[![macOS](https://github.com/Kh1ng/llm-chat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-macos.yml)
+[![iOS](https://github.com/Kh1ng/llm-chat/actions/workflows/build-ios.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-ios.yml)
+[![Android](https://github.com/Kh1ng/llm-chat/actions/workflows/build-android.yml/badge.svg)](https://github.com/Kh1ng/llm-chat/actions/workflows/build-android.yml)
 
 # LLM Chat
 
@@ -32,7 +32,7 @@ See the [Wiki](https://github.com/llm-chat/wiki) for:
 
 ## Authentication & Remote Access
 
-> ⚠️ **Security Disclaimer**
+> **Security Disclaimer**
 
 This application does not fully implement built-in authentication. If you plan to expose your Ollama server over the internet or use this app remotely, it's **strongly recommended** to secure access with a VPN (e.g., [Tailscale](https://tailscale.com)) or equivalent network-layer protection.
 
